@@ -1,0 +1,80 @@
+<div class="page-head head-row">
+  <div>
+    <h1>Quản lý tài khoản game</h1>
+    <p>{{ accounts().length }} tin đang có trong hệ thống</p>
+  </div>
+  <a class="btn" routerLink="/admin/accounts/new">+ Thêm tin rao</a>
+</div>
+
+<div class="field search">
+  <label for="admin-search">Tìm tin rao</label>
+  <input
+    id="admin-search"
+    type="search"
+    class="input"
+    placeholder="Tên tin hoặc mã tin"
+    autocomplete="off"
+    [formControl]="searchControl"
+  />
+</div>
+
+@if (accounts().length === 0) {
+  <div class="empty-state card">
+    <h2>Không có tin nào phù hợp</h2>
+    <p>Thử từ khóa khác hoặc thêm một tin mới.</p>
+  </div>
+} @else {
+  <div class="table-wrap">
+    <table class="data">
+      <caption class="sr-only">Danh sách tài khoản game</caption>
+      <thead>
+        <tr>
+          <th scope="col">Tin rao</th>
+          <th scope="col">Game</th>
+          <th scope="col">Rank</th>
+          <th scope="col" class="num">Giá</th>
+          <th scope="col">Trạng thái</th>
+          <th scope="col"><span class="sr-only">Thao tác</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (account of accounts(); track account.id) {
+          <tr>
+            <td>
+              <strong>{{ account.title }}</strong>
+              <span class="sub">{{ account.id }}</span>
+            </td>
+            <td>{{ gameName(account.game) }}</td>
+            <td>{{ account.rank }}</td>
+            <td class="num">
+              {{ account.price | vnd }}
+              @if (account.oldPrice) {
+                <span class="sub strike">{{ account.oldPrice | vnd }}</span>
+              }
+            </td>
+            <td>
+              @if (account.status === 'con_hang') {
+                <span class="badge badge-success">Còn hàng</span>
+              } @else {
+                <span class="badge badge-out">Đã bán</span>
+              }
+            </td>
+            <td class="actions">
+              <a class="btn btn-sm btn-ghost" [routerLink]="['/admin/accounts', account.id, 'edit']" [attr.aria-label]="'Sửa ' + account.title">Sửa</a>
+              <button type="button" class="btn btn-sm btn-danger" [attr.aria-label]="'Xóa ' + account.title" (click)="askDelete(account)">Xóa</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}
+
+<app-confirm-dialog
+  [open]="pendingDelete() !== null"
+  title="Xóa tin rao?"
+  [message]="'Bạn sắp xóa &quot;' + (pendingDelete()?.title ?? '') + '&quot;. Thao tác này không thể hoàn tác.'"
+  confirmLabel="Xóa tin"
+  (confirmed)="confirmDelete()"
+  (cancelled)="cancelDelete()"
+/>

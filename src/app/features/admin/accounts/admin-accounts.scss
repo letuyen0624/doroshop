@@ -1,0 +1,44 @@
+.head-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.head-row h1 {
+  margin-bottom: var(--space-1);
+}
+
+.search {
+  max-width: 420px;
+  margin-bottom: var(--space-4);
+}
+
+.sub {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-subtle);
+}
+
+.strike {
+  text-decoration: line-through;
+}
+
+.num {
+  text-align: right !important;
+  white-space: nowrap;
+}
+
+.actions {
+  white-space: nowrap;
+  text-align: right !important;
+}
+
+.actions .btn + .btn {
+  margin-left: var(--space-2);
+}
+
+.empty-state.card {
+  padding: var(--space-7) var(--space-4);
+}

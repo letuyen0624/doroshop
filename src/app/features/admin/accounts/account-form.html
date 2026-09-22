@@ -1,0 +1,207 @@
+<div class="page-head">
+  <h1>{{ id() ? 'Sửa tin rao' : 'Thêm tin rao mới' }}</h1>
+  <p><a routerLink="/admin/accounts">← Quay lại danh sách</a></p>
+</div>
+
+@if (notFound()) {
+  <div class="empty-state card">
+    <h2>Không tìm thấy tin rao</h2>
+    <p>Tin này có thể đã bị xóa.</p>
+    <a class="btn" routerLink="/admin/accounts">Về danh sách tài khoản</a>
+  </div>
+} @else {
+  <form class="card form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="grid-2">
+      <div class="field">
+        <label for="af-title">Tiêu đề tin rao</label>
+        <input id="af-title" class="input" type="text" formControlName="title"
+          [attr.aria-invalid]="invalid('title') ? 'true' : null"
+          [attr.aria-describedby]="invalid('title') ? 'af-title-err' : null" />
+        @if (invalid('title')) {
+          <span id="af-title-err" class="field-error">Tiêu đề cần từ 6 đến 150 ký tự</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="af-game">Game</label>
+        <select id="af-game" class="select" formControlName="game">
+          @for (game of games; track game.id) {
+            <option [value]="game.id">{{ game.name }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="af-server">Server</label>
+        <input id="af-server" class="input" type="text" formControlName="server"
+          [attr.aria-invalid]="invalid('server') ? 'true' : null"
+          [attr.aria-describedby]="invalid('server') ? 'af-server-err' : null" />
+        @if (invalid('server')) {
+          <span id="af-server-err" class="field-error">Vui lòng nhập server</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="af-rank">Rank</label>
+        <input id="af-rank" class="input" type="text" formControlName="rank"
+          [attr.aria-invalid]="invalid('rank') ? 'true' : null"
+          [attr.aria-describedby]="invalid('rank') ? 'af-rank-err' : null" />
+        @if (invalid('rank')) {
+          <span id="af-rank-err" class="field-error">Vui lòng nhập rank</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="af-characters">Số tướng/nhân vật</label>
+        <input id="af-characters" class="input" type="number" min="0" step="1" formControlName="characterCount"
+          [attr.aria-invalid]="invalid('characterCount') ? 'true' : null"
+          [attr.aria-describedby]="invalid('characterCount') ? 'af-characters-err' : null" />
+        @if (invalid('characterCount')) {
+          <span id="af-characters-err" class="field-error">Phải là số nguyên từ 0 trở lên</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="af-skins">Số skin</label>
+        <input id="af-skins" class="input" type="number" min="0" step="1" formControlName="skinCount"
+          [attr.aria-invalid]="invalid('skinCount') ? 'true' : null"
+          [attr.aria-describedby]="invalid('skinCount') ? 'af-skins-err' : null" />
+        @if (invalid('skinCount')) {
+          <span id="af-skins-err" class="field-error">Phải là số nguyên từ 0 trở lên</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="af-login">Tình trạng liên kết</label>
+        <select id="af-login" class="select" formControlName="loginStatus">
+          @for (option of loginStatusOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="af-status">Trạng thái</label>
+        <select id="af-status" class="select" formControlName="status">
+          <option value="con_hang">Còn hàng</option>
+          <option value="da_ban">Đã bán</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="af-price">Giá bán (₫)</label>
+        <input id="af-price" class="input" type="number" min="0" step="10000" formControlName="price"
+          [attr.aria-invalid]="invalid('price') ? 'true' : null"
+          [attr.aria-describedby]="invalid('price') ? 'af-price-err' : null" />
+        @if (invalid('price')) {
+          <span id="af-price-err" class="field-error">Giá bán phải từ 1.000 ₫ trở lên</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="af-old">Giá gốc trước khi giảm (₫, không bắt buộc)</label>
+        <input id="af-old" class="input" type="number" min="0" step="10000" formControlName="oldPrice"
+          [attr.aria-invalid]="invalid('oldPrice') || showOldPriceError() ? 'true' : null"
+          [attr.aria-describedby]="invalid('oldPrice') || showOldPriceError() ? 'af-old-err' : null" />
+        @if (invalid('oldPrice')) {
+          <span id="af-old-err" class="field-error">Giá gốc không hợp lệ</span>
+        } @else if (showOldPriceError()) {
+          <span id="af-old-err" class="field-error">Giá gốc phải lớn hơn giá bán</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="af-rating">Điểm đánh giá (0 - 5)</label>
+        <input id="af-rating" class="input" type="number" min="0" max="5" step="0.1" formControlName="rating"
+          [attr.aria-invalid]="invalid('rating') ? 'true' : null"
+          [attr.aria-describedby]="invalid('rating') ? 'af-rating-err' : null" />
+        @if (invalid('rating')) {
+          <span id="af-rating-err" class="field-error">Điểm đánh giá phải nằm trong khoảng 0 đến 5</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="af-reviews">Số lượt đánh giá</label>
+        <input id="af-reviews" class="input" type="number" min="0" step="1" formControlName="reviewCount"
+          [attr.aria-invalid]="invalid('reviewCount') ? 'true' : null"
+          [attr.aria-describedby]="invalid('reviewCount') ? 'af-reviews-err' : null" />
+        @if (invalid('reviewCount')) {
+          <span id="af-reviews-err" class="field-error">Số lượt đánh giá phải là số nguyên từ 0 trở lên</span>
+        }
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="af-desc">Mô tả</label>
+      <textarea id="af-desc" class="textarea" rows="4" formControlName="description"
+        [attr.aria-invalid]="invalid('description') ? 'true' : null"
+        [attr.aria-describedby]="invalid('description') ? 'af-desc-err' : null"></textarea>
+      @if (invalid('description')) {
+        <span id="af-desc-err" class="field-error">Mô tả cần từ 20 đến 1500 ký tự</span>
+      }
+    </div>
+
+    <fieldset class="field extra-info">
+      <legend>Thông tin thêm</legend>
+      <p class="hint">Ví dụ: "Trang phục Đấu Trường Chân Lý" - "6 bộ". Thêm hoặc xóa từng dòng tùy ý.</p>
+
+      <div class="extra-rows" [formArrayName]="'extraInfo'">
+        @for (row of extraInfoArray.controls; track $index) {
+          <div class="extra-row" [formGroupName]="$index">
+            <div class="extra-field">
+              <label class="sr-only" [for]="'extra-key-' + $index">Tên thông tin dòng {{ $index + 1 }}</label>
+              <input
+                [id]="'extra-key-' + $index"
+                class="input"
+                type="text"
+                placeholder="Tên thông tin, ví dụ: Số kim cương"
+                formControlName="key"
+              />
+            </div>
+            <div class="extra-field">
+              <label class="sr-only" [for]="'extra-value-' + $index">Giá trị dòng {{ $index + 1 }}</label>
+              <input
+                [id]="'extra-value-' + $index"
+                class="input"
+                type="text"
+                placeholder="Giá trị, ví dụ: 12.000"
+                formControlName="value"
+              />
+            </div>
+            <button
+              type="button"
+              class="btn btn-sm btn-ghost remove-row"
+              [attr.aria-label]="'Xóa dòng thông tin ' + ($index + 1)"
+              (click)="removeExtraInfoRow($index)"
+            >
+              Xóa
+            </button>
+          </div>
+        }
+      </div>
+
+      <button type="button" class="btn btn-sm btn-soft" (click)="addExtraInfoRow()">+ Thêm dòng thông tin</button>
+
+      @if (showExtraInfoError()) {
+        <span class="field-error">Cần ít nhất một dòng thông tin có đủ tên và giá trị</span>
+      }
+    </fieldset>
+
+    <div class="field">
+      <label for="af-tags">Thẻ (tags)</label>
+      <input id="af-tags" class="input" type="text" formControlName="tagsText" placeholder="full skin, giá tốt, bán chạy" />
+      <span class="hint">Ngăn cách bằng dấu phẩy.</span>
+    </div>
+
+    @if (errorMessage(); as message) {
+      <p class="form-error" role="alert">{{ message }}</p>
+    }
+
+    <div class="row actions">
+      <button type="submit" class="btn" [disabled]="saving()">
+        {{ saving() ? 'Đang lưu...' : (id() ? 'Lưu thay đổi' : 'Thêm tin rao') }}
+      </button>
+      <a class="btn btn-ghost" routerLink="/admin/accounts">Hủy</a>
+    </div>
+  </form>
+}

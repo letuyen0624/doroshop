@@ -1,0 +1,120 @@
+<div class="page-head">
+  <h1>Tổng quan</h1>
+  <p>Số liệu kinh doanh cập nhật theo thời gian thực từ dữ liệu trong trình duyệt.</p>
+</div>
+
+<ul class="plain stats">
+  <li class="card stat">
+    <span class="stat-label">Tổng doanh thu</span>
+    <strong class="stat-value">{{ revenue() | vnd }}</strong>
+    <span class="stat-note">Không tính đơn đã hủy</span>
+  </li>
+  <li class="card stat">
+    <span class="stat-label">Số đơn hàng</span>
+    <strong class="stat-value">{{ orderCount() }}</strong>
+    <span class="stat-note">{{ pendingCount() }} đơn chờ xác nhận</span>
+  </li>
+  <li class="card stat">
+    <span class="stat-label">Tin đang rao</span>
+    <strong class="stat-value">{{ availableCount() }}</strong>
+    <span class="stat-note">Trên tổng {{ accountCount() }} tin</span>
+  </li>
+  <li class="card stat">
+    <span class="stat-label">Tin đã bán</span>
+    <strong class="stat-value">{{ soldCount() }}</strong>
+    <span class="stat-note">Đã bàn giao cho khách</span>
+  </li>
+</ul>
+
+<section class="card panel" aria-labelledby="chart-title">
+  <div class="panel-head">
+    <h2 id="chart-title">Doanh thu 7 ngày gần nhất</h2>
+    <span class="badge badge-info">{{ weekRevenue() | vnd }}</span>
+  </div>
+
+  <div class="chart" role="img" [attr.aria-label]="'Biểu đồ cột doanh thu 7 ngày gần nhất, tổng ' + weekRevenue() + ' đồng'">
+    @for (bar of bars(); track bar.key) {
+      <div class="bar-col">
+        <span class="bar-value">{{ bar.revenue > 0 ? (bar.revenue / 1000000 | number: '1.0-1') + ' tr' : '' }}</span>
+        <div class="bar-track" [style.height.px]="chartHeight">
+          <div class="bar" [style.height.px]="bar.height" [title]="bar.label + ': ' + (bar.revenue | vnd)"></div>
+        </div>
+        <span class="bar-label">{{ bar.label }}</span>
+      </div>
+    }
+  </div>
+
+  <table class="sr-only">
+    <caption>Doanh thu theo ngày</caption>
+    <thead>
+      <tr><th scope="col">Ngày</th><th scope="col">Doanh thu</th></tr>
+    </thead>
+    <tbody>
+      @for (bar of bars(); track bar.key) {
+        <tr><td>{{ bar.label }}</td><td>{{ bar.revenue | vnd }}</td></tr>
+      }
+    </tbody>
+  </table>
+</section>
+
+<section class="card panel" aria-labelledby="game-title">
+  <h2 id="game-title">Số tin theo từng game</h2>
+  <ul class="plain game-bars">
+    @for (row of byGame(); track row.game.id) {
+      <li>
+        <span class="game-name">{{ row.game.name }}</span>
+        <div class="game-track">
+          <div class="game-bar" [style.width.%]="(row.count / maxGameCount()) * 100"></div>
+        </div>
+        <span class="game-count">{{ row.count }}</span>
+      </li>
+    }
+  </ul>
+</section>
+
+<div class="two-col">
+  <section class="card panel" aria-labelledby="recent-title">
+    <div class="panel-head">
+      <h2 id="recent-title">Đơn hàng gần đây</h2>
+      <a routerLink="/admin/orders">Xem tất cả</a>
+    </div>
+    @if (recentOrders().length === 0) {
+      <p class="hint">Chưa có đơn hàng nào.</p>
+    } @else {
+      <ul class="plain list">
+        @for (order of recentOrders(); track order.id) {
+          <li>
+            <div>
+              <strong>{{ order.id }}</strong>
+              <span class="sub">{{ order.createdAt | date: 'dd/MM/yyyy HH:mm' }} · {{ order.total | vnd }}</span>
+            </div>
+            <app-order-status [status]="order.status" />
+          </li>
+        }
+      </ul>
+    }
+  </section>
+
+  <section class="card panel" aria-labelledby="tip-title">
+    <div class="panel-head">
+      <h2 id="tip-title">Quản lý nhanh</h2>
+      <a routerLink="/admin/accounts">Quản lý</a>
+    </div>
+    <ul class="plain list">
+      <li>
+        <div>
+          <strong>Thêm tin rao mới</strong>
+          <span class="sub">Đăng tài khoản game để bán trên cửa hàng</span>
+        </div>
+        <a class="btn btn-sm" routerLink="/admin/accounts/new">+ Thêm</a>
+      </li>
+      <li>
+        <div>
+          <strong>Xử lý đơn chờ</strong>
+          <span class="sub">{{ pendingCount() }} đơn đang chờ xác nhận</span>
+        </div>
+        <a class="btn btn-sm btn-soft" routerLink="/admin/orders">Xem</a>
+      </li>
+    </ul>
+  </section>
+</div>

@@ -1,0 +1,81 @@
+<div class="page-head">
+  <h1>Quản lý đơn hàng</h1>
+  <p>{{ filtered().length }} đơn hàng</p>
+</div>
+
+<div class="chips" role="group" aria-label="Lọc theo trạng thái">
+  <button type="button" class="chip" [class.active]="filter() === 'all'" [attr.aria-pressed]="filter() === 'all'" (click)="setFilter('all')">
+    Tất cả ({{ countFor('all') }})
+  </button>
+  @for (status of statuses; track status) {
+    <button type="button" class="chip" [class.active]="filter() === status" [attr.aria-pressed]="filter() === status" (click)="setFilter(status)">
+      {{ labels[status] }} ({{ countFor(status) }})
+    </button>
+  }
+</div>
+
+@if (filtered().length === 0) {
+  <div class="empty-state card">
+    <h2>Không có đơn hàng nào</h2>
+    <p>Chưa có đơn hàng nào ở trạng thái này.</p>
+  </div>
+} @else {
+  <div class="table-wrap">
+    <table class="data">
+      <caption class="sr-only">Danh sách đơn hàng</caption>
+      <thead>
+        <tr>
+          <th scope="col">Mã đơn</th>
+          <th scope="col">Người nhận</th>
+          <th scope="col">Ngày đặt</th>
+          <th scope="col" class="num">Tổng tiền</th>
+          <th scope="col">Trạng thái</th>
+          <th scope="col"><span class="sr-only">Thao tác</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (order of filtered(); track order.id) {
+          <tr [class.selected]="selectedId() === order.id">
+            <td><strong>{{ order.id }}</strong></td>
+            <td>
+              {{ order.contact.fullName }}
+              <span class="sub">{{ order.contact.contact }}</span>
+            </td>
+            <td>{{ order.createdAt | date: 'dd/MM/yyyy HH:mm' }}</td>
+            <td class="num">{{ order.total | vnd }}</td>
+            <td>
+              <label class="sr-only" [for]="'status-' + order.id">Trạng thái đơn {{ order.id }}</label>
+              <select
+                class="select status-select"
+                [id]="'status-' + order.id"
+                [ngModel]="order.status"
+                [disabled]="updatingId() === order.id"
+                (ngModelChange)="changeStatus(order, $event)"
+              >
+                @for (status of statuses; track status) {
+                  <option [value]="status">{{ labels[status] }}</option>
+                }
+              </select>
+            </td>
+            <td class="actions">
+              <button
+                type="button"
+                class="btn btn-sm btn-ghost"
+                [attr.aria-expanded]="selectedId() === order.id"
+                (click)="select(order.id)"
+              >
+                {{ selectedId() === order.id ? 'Ẩn' : 'Chi tiết' }}
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (selected(); as order) {
+    <section class="card detail" aria-label="Chi tiết đơn hàng">
+      <app-order-detail-view [order]="order" [credentials]="credentialsFor(order.id)" />
+    </section>
+  }
+}
