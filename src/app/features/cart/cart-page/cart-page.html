@@ -1,0 +1,96 @@
+<div class="page container">
+  <div class="page-head">
+    <h1>Giỏ hàng</h1>
+    <p>{{ cart.itemCount() }} tài khoản trong giỏ</p>
+  </div>
+
+  @if (cart.isEmpty()) {
+    <div class="empty-state card">
+      <div class="empty-icon" aria-hidden="true">🛒</div>
+      <h2>Giỏ hàng của bạn đang trống</h2>
+      <p>Hãy chọn vài acc ưng ý rồi quay lại đây để thanh toán nhé.</p>
+      <a class="btn" routerLink="/accounts">Bắt đầu chọn acc</a>
+    </div>
+  } @else {
+    <div class="layout">
+      <section aria-labelledby="cart-items-title">
+        <h2 id="cart-items-title" class="sr-only">Tài khoản trong giỏ</h2>
+
+        <ul class="plain items">
+          @for (line of cart.lines(); track line.account.id) {
+            <li class="item card">
+              <a class="item-thumb" [routerLink]="['/accounts', line.account.slug]" tabindex="-1" aria-hidden="true">
+                <app-account-art [game]="line.account.game" [height]="110" />
+              </a>
+
+              <div class="item-main">
+                <a class="item-name" [routerLink]="['/accounts', line.account.slug]">{{ line.account.title }}</a>
+                <app-game-badge [game]="line.account.game" [compact]="true" />
+                <span class="item-meta">Rank {{ line.account.rank }} · {{ line.account.server }}</span>
+              </div>
+
+              <div class="item-total">
+                <strong>{{ line.lineTotal | vnd }}</strong>
+                <button
+                  type="button"
+                  class="remove"
+                  [attr.aria-label]="'Xóa ' + line.account.title + ' khỏi giỏ hàng'"
+                  (click)="remove(line.account.id, line.account.title)"
+                >
+                  Xóa
+                </button>
+              </div>
+            </li>
+          }
+        </ul>
+      </section>
+
+      <aside class="summary card" aria-labelledby="summary-title">
+        <h2 id="summary-title">Tóm tắt đơn hàng</h2>
+
+        <form class="coupon" (submit)="applyCoupon($event)">
+          <label for="coupon-input">Mã giảm giá</label>
+          <div class="coupon-row">
+            <input
+              id="coupon-input"
+              class="input"
+              type="text"
+              placeholder="Ví dụ: DORO10"
+              autocomplete="off"
+              [formControl]="couponControl"
+            />
+            <button type="submit" class="btn btn-soft">Áp dụng</button>
+          </div>
+          @if (cart.coupon(); as coupon) {
+            <p class="applied badge badge-success">
+              {{ coupon.code }}: {{ coupon.description }}
+              <button type="button" class="remove" aria-label="Gỡ mã giảm giá" (click)="removeCoupon()">Gỡ</button>
+            </p>
+          } @else {
+            <p class="hint">Thử {{ coupons[0].code }} hoặc {{ coupons[1].code }}.</p>
+          }
+        </form>
+
+        <dl class="totals">
+          <div>
+            <dt>Tạm tính</dt>
+            <dd>{{ cart.subtotal() | vnd }}</dd>
+          </div>
+          @if (cart.discount() > 0) {
+            <div class="discount">
+              <dt>Giảm giá</dt>
+              <dd>-{{ cart.discount() | vnd }}</dd>
+            </div>
+          }
+          <div class="grand">
+            <dt>Tổng cộng</dt>
+            <dd>{{ cart.total() | vnd }}</dd>
+          </div>
+        </dl>
+
+        <a class="btn btn-block" routerLink="/checkout">Tiến hành thanh toán</a>
+        <a class="btn btn-ghost btn-block" routerLink="/accounts">Tiếp tục chọn acc</a>
+      </aside>
+    </div>
+  }
+</div>

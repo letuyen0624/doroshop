@@ -1,0 +1,201 @@
+.layout {
+  display: grid;
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.empty-state.card {
+  padding: var(--space-7) var(--space-4);
+}
+
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-3);
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: var(--space-3) var(--space-4);
+  padding: var(--space-3);
+  align-items: center;
+}
+
+.item-thumb {
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  display: block;
+}
+
+.item-main {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
+}
+
+.item-name {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.item-name:hover {
+  color: var(--accent-strong);
+}
+
+.item-meta {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.item-total {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.item-total strong {
+  color: var(--accent-strong);
+  font-size: 1.05rem;
+}
+
+.remove {
+  border: none;
+  background: transparent;
+  color: var(--danger);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.remove:hover {
+  text-decoration: underline;
+}
+
+/* ---------- Tóm tắt ---------- */
+
+.summary {
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.summary h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.coupon {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.coupon label {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.coupon-row {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.coupon-row .btn {
+  flex: none;
+}
+
+.coupon p {
+  margin: 0;
+}
+
+.applied {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-2);
+  white-space: normal;
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+}
+
+.totals {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.totals div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.totals dt {
+  color: var(--text-muted);
+}
+
+.totals dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+.totals .discount dd {
+  color: var(--success);
+}
+
+.totals .grand {
+  padding-top: var(--space-3);
+  margin-top: var(--space-1);
+  border-top: 1px solid var(--border);
+  font-size: 1.15rem;
+}
+
+.totals .grand dt {
+  color: var(--text);
+  font-weight: 800;
+}
+
+.totals .grand dd {
+  color: var(--accent-strong);
+  font-weight: 800;
+}
+
+@media (min-width: 620px) {
+  .item {
+    grid-template-columns: 110px 1fr auto;
+  }
+
+  .item-total {
+    grid-column: auto;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-1);
+    min-width: 120px;
+  }
+}
+
+@media (min-width: 960px) {
+  .layout {
+    grid-template-columns: 1fr 360px;
+  }
+
+  .summary {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-4));
+  }
+}
