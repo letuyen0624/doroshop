@@ -1,0 +1,123 @@
+<div class="page container">
+  <div class="page-head">
+    <h1>Thanh toán</h1>
+    <p>Điền thông tin nhận tài khoản và chọn cách thanh toán. Đây là bản demo nên không có khoản tiền thật nào bị trừ.</p>
+  </div>
+
+  <form class="layout" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="stack">
+      <section class="card panel" aria-labelledby="contact-title">
+        <h2 id="contact-title">1. Thông tin nhận tài khoản</h2>
+
+        <div class="grid-2">
+          <div class="field">
+            <label for="co-name">Họ và tên</label>
+            <input
+              id="co-name"
+              class="input"
+              type="text"
+              autocomplete="name"
+              formControlName="fullName"
+              [attr.aria-invalid]="showError('fullName') ? 'true' : null"
+              [attr.aria-describedby]="showError('fullName') ? 'co-name-error' : null"
+            />
+            @if (showError('fullName')) {
+              <span id="co-name-error" class="field-error">Vui lòng nhập họ và tên (ít nhất 2 ký tự)</span>
+            }
+          </div>
+
+          <div class="field">
+            <label for="co-contact">Email hoặc số điện thoại</label>
+            <input
+              id="co-contact"
+              class="input"
+              type="text"
+              autocomplete="email"
+              placeholder="ban@example.com hoặc 0912345678"
+              formControlName="contact"
+              [attr.aria-invalid]="showError('contact') ? 'true' : null"
+              [attr.aria-describedby]="showError('contact') ? 'co-contact-error' : null"
+            />
+            @if (showError('contact')) {
+              <span id="co-contact-error" class="field-error">
+                @if (form.controls.contact.hasError('required')) {
+                  Vui lòng nhập email hoặc số điện thoại
+                } @else {
+                  Email hoặc số điện thoại không hợp lệ
+                }
+              </span>
+            }
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="co-note">Ghi chú (không bắt buộc)</label>
+          <textarea id="co-note" class="textarea" rows="2" maxlength="300" formControlName="note"></textarea>
+        </div>
+      </section>
+
+      <fieldset class="card panel payment" aria-labelledby="pay-title">
+        <legend id="pay-title">2. Phương thức thanh toán</legend>
+
+        @for (option of paymentOptions; track option.value) {
+          <label class="pay-option" [class.selected]="method() === option.value">
+            <input type="radio" formControlName="paymentMethod" [value]="option.value" />
+            <span class="pay-text">
+              <strong>{{ option.label }}</strong>
+              <span>{{ option.description }}</span>
+            </span>
+          </label>
+        }
+
+        @if (method() === 'bank') {
+          <div class="bank-box" role="note">
+            <p><strong>Thông tin chuyển khoản (giả lập)</strong></p>
+            <dl>
+              <div><dt>Ngân hàng</dt><dd>DoroBank - CN Sài Gòn</dd></div>
+              <div><dt>Số tài khoản</dt><dd>0246 813 579</dd></div>
+              <div><dt>Chủ tài khoản</dt><dd>CONG TY DOROSHOP DEMO</dd></div>
+              <div><dt>Nội dung</dt><dd>{{ transferRef }}</dd></div>
+            </dl>
+          </div>
+        }
+
+        @if (method() === 'wallet') {
+          <div class="bank-box" role="note">
+            <p>
+              Ví DoroPay là ví giả lập: bấm thanh toán là đơn được ghi nhận ngay, không kết nối cổng
+              thanh toán nào và không cần nhập thông tin thẻ.
+            </p>
+          </div>
+        }
+      </fieldset>
+    </div>
+
+    <aside class="card panel summary" aria-labelledby="co-summary-title">
+      <h2 id="co-summary-title">Đơn hàng của bạn</h2>
+
+      <ul class="plain lines">
+        @for (line of cart.lines(); track line.account.id) {
+          <li>
+            <span class="line-name">{{ line.account.title }}</span>
+            <span>{{ line.lineTotal | vnd }}</span>
+          </li>
+        }
+      </ul>
+
+      <dl class="totals">
+        <div><dt>Tạm tính</dt><dd>{{ cart.subtotal() | vnd }}</dd></div>
+        @if (cart.discount() > 0) {
+          <div class="discount"><dt>Giảm giá ({{ cart.coupon()?.code }})</dt><dd>-{{ cart.discount() | vnd }}</dd></div>
+        }
+        <div class="grand"><dt>Tổng cộng</dt><dd>{{ cart.total() | vnd }}</dd></div>
+      </dl>
+
+      @if (errorMessage(); as message) {
+        <p class="form-error" role="alert">{{ message }}</p>
+      }
+
+      <button type="submit" class="btn btn-block" [disabled]="submitting()">{{ submitLabel() }}</button>
+      <a class="btn btn-ghost btn-block" routerLink="/cart">Quay lại giỏ hàng</a>
+    </aside>
+  </form>
+</div>

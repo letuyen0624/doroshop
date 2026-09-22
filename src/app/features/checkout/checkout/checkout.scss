@@ -1,0 +1,212 @@
+.layout {
+  display: grid;
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.panel {
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.panel h2,
+.payment legend {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.payment {
+  margin: 0;
+  min-width: 0;
+}
+
+.payment legend {
+  padding: 0;
+  float: left;
+  width: 100%;
+  margin-bottom: var(--space-4);
+}
+
+.payment legend + * {
+  clear: both;
+}
+
+.grid-2 {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.pay-option {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition:
+    border-color var(--transition),
+    background var(--transition);
+}
+
+.pay-option:hover {
+  background: var(--surface-hover);
+}
+
+.pay-option.selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.pay-option input {
+  margin-top: 4px;
+  accent-color: var(--accent);
+}
+
+.pay-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.pay-text strong {
+  color: var(--text);
+  font-size: 0.98rem;
+}
+
+.pay-option.selected .pay-text {
+  color: var(--text);
+}
+
+.bank-box {
+  margin-top: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  font-size: 0.9rem;
+}
+
+.bank-box p {
+  margin: 0 0 var(--space-2);
+}
+
+.bank-box p:last-child {
+  margin-bottom: 0;
+}
+
+.bank-box dl {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.bank-box dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.bank-box dt {
+  color: var(--text-muted);
+}
+
+.bank-box dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+/* ---------- Tóm tắt ---------- */
+
+.lines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.92rem;
+}
+
+.lines li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.line-name {
+  min-width: 0;
+}
+
+.totals {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.totals div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.totals dt {
+  color: var(--text-muted);
+}
+
+.totals dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.totals .discount dd {
+  color: var(--success);
+}
+
+.totals .grand {
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+  font-size: 1.15rem;
+}
+
+.totals .grand dt {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.totals .grand dd {
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.form-error {
+  margin: 0;
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+@media (min-width: 620px) {
+  .grid-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 960px) {
+  .layout {
+    grid-template-columns: 1fr 380px;
+  }
+
+  .summary {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-4));
+  }
+}
