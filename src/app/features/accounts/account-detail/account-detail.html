@@ -1,0 +1,156 @@
+<div class="page container">
+  @if (loading()) {
+    <div class="detail" aria-hidden="true">
+      <div class="skeleton gallery-skeleton"></div>
+      <div class="info">
+        <div class="skeleton line lg"></div>
+        <div class="skeleton line"></div>
+        <div class="skeleton line short"></div>
+        <div class="skeleton block"></div>
+      </div>
+    </div>
+    <p class="sr-only" role="status">Đang tải thông tin tài khoản</p>
+  } @else if (failed()) {
+    <div class="empty-state card">
+      <h1>Không tìm thấy tài khoản</h1>
+      <p>Tin rao này có thể đã bị gỡ hoặc đường dẫn không đúng.</p>
+      <a class="btn" routerLink="/accounts">Xem tài khoản khác</a>
+    </div>
+  } @else if (account(); as item) {
+    <nav class="breadcrumb" aria-label="Đường dẫn">
+      <a routerLink="/">Trang chủ</a>
+      <span aria-hidden="true">/</span>
+      <a routerLink="/accounts">Tài khoản</a>
+      <span aria-hidden="true">/</span>
+      <a [routerLink]="['/accounts']" [queryParams]="{ games: item.game }">{{ gameLabel() }}</a>
+      <span aria-hidden="true">/</span>
+      <span class="current" aria-current="page">{{ item.title }}</span>
+    </nav>
+
+    <div class="detail">
+      <div class="gallery">
+        <div class="gallery-main card">
+          <app-account-art [game]="item.game" [title]="item.title" [height]="340" />
+          @if (discount() > 0) {
+            <span class="badge badge-sale floating">-{{ discount() }}%</span>
+          }
+          @if (item.status === 'da_ban') {
+            <span class="badge badge-out floating-right">Đã bán</span>
+          }
+        </div>
+      </div>
+
+      <div class="info">
+        <app-game-badge [game]="item.game" />
+        <h1>{{ item.title }}</h1>
+
+        <div class="row rating-row">
+          <app-star-rating [rating]="item.rating" [reviewCount]="item.reviewCount" />
+          @if (item.status === 'con_hang') {
+            <span class="badge badge-success">Còn hàng</span>
+          } @else {
+            <span class="badge badge-out">Đã bán</span>
+          }
+        </div>
+
+        <div class="price-box card">
+          <div class="row prices">
+            <span class="price">{{ item.price | vnd }}</span>
+            @if (item.oldPrice) {
+              <span class="old-price">{{ item.oldPrice | vnd }}</span>
+              <span class="badge badge-sale">Tiết kiệm {{ saveAmount() | vnd }}</span>
+            }
+          </div>
+          <p class="price-note">Giá đã bao gồm phí bàn giao. Không phát sinh thêm chi phí nào khác.</p>
+        </div>
+
+        <dl class="quick-specs">
+          <div>
+            <dt>Rank</dt>
+            <dd>{{ item.rank }}</dd>
+          </div>
+          <div>
+            <dt>Server</dt>
+            <dd>{{ item.server }}</dd>
+          </div>
+          <div>
+            <dt>Số tướng/nhân vật</dt>
+            <dd>{{ item.characterCount }}</dd>
+          </div>
+          <div>
+            <dt>Số skin</dt>
+            <dd>{{ item.skinCount }}</dd>
+          </div>
+          <div>
+            <dt>Tình trạng liên kết</dt>
+            <dd>{{ loginStatusLabel() }}</dd>
+          </div>
+        </dl>
+
+        <p class="description">{{ item.description }}</p>
+
+        <div class="buy-box">
+          <button
+            type="button"
+            class="btn add-btn"
+            [disabled]="item.status === 'da_ban' || alreadyInCart()"
+            (click)="addToCart()"
+          >
+            @if (item.status === 'da_ban') {
+              Đã bán
+            } @else if (alreadyInCart()) {
+              Đã có trong giỏ
+            } @else {
+              Thêm vào giỏ hàng
+            }
+          </button>
+          <a class="btn btn-ghost" routerLink="/cart">Xem giỏ hàng</a>
+        </div>
+
+        <ul class="plain assurances">
+          <li>Bàn giao thông tin ngay sau khi thanh toán được xác nhận</li>
+          <li>Bảo hành đổi tài khoản trong 7 ngày nếu có lỗi</li>
+          <li>Hỗ trợ tư vấn trước khi mua qua khung chat (mô phỏng)</li>
+        </ul>
+      </div>
+    </div>
+
+    <section class="specs" aria-labelledby="specs-title">
+      <h2 id="specs-title">Thông tin chi tiết</h2>
+      <div class="table-wrap">
+        <table class="data specs-table">
+          <caption class="sr-only">Bảng thông tin chi tiết của {{ item.title }}</caption>
+          <tbody>
+            @for (spec of extraEntries(); track spec.key) {
+              <tr>
+                <th scope="row">{{ spec.key }}</th>
+                <td>{{ spec.value }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      @if (item.tags.length > 0) {
+        <ul class="plain tags">
+          @for (tag of item.tags; track tag) {
+            <li class="badge">#{{ tag }}</li>
+          }
+        </ul>
+      }
+    </section>
+
+    <section class="related" aria-labelledby="related-title">
+      <h2 id="related-title">Tài khoản liên quan</h2>
+      @if (related().length === 0) {
+        <p class="hint">Chưa có tài khoản liên quan trong game này.</p>
+      } @else {
+        <div class="account-grid">
+          @for (item of related(); track item.id) {
+            <app-account-card [account]="item" />
+          }
+        </div>
+      }
+    </section>
+  }
+</div>

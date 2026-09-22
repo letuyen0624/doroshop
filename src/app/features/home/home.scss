@@ -1,0 +1,223 @@
+.section {
+  margin-top: var(--space-7);
+}
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.section-head h2 {
+  margin: 0;
+}
+
+.section-head a {
+  font-weight: 700;
+  font-size: 0.92rem;
+  white-space: nowrap;
+}
+
+.center-title {
+  text-align: center;
+  margin-bottom: var(--space-5);
+}
+
+/* ---------- Banner ---------- */
+
+.hero {
+  display: grid;
+  gap: var(--space-6);
+  align-items: center;
+  padding-top: var(--space-5);
+  padding-bottom: var(--space-5);
+}
+
+.hero-text h1 {
+  margin: var(--space-3) 0;
+}
+
+.hero-text > p {
+  color: var(--text-muted);
+  max-width: 52ch;
+  margin-bottom: var(--space-5);
+  font-size: 1.05rem;
+}
+
+.hero-stats {
+  display: flex;
+  gap: var(--space-6);
+  margin: var(--space-6) 0 0;
+  flex-wrap: wrap;
+}
+
+.hero-stats div {
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-stats dt {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--accent-strong);
+}
+
+.hero-stats dd {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.hero-art {
+  position: relative;
+  min-height: 300px;
+  display: none;
+}
+
+.hero-card {
+  position: absolute;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  border: 4px solid var(--surface);
+}
+
+.hero-card-1 {
+  width: 56%;
+  top: 0;
+  right: 6%;
+  z-index: 2;
+}
+
+.hero-card-2 {
+  width: 44%;
+  bottom: 4%;
+  left: 2%;
+  z-index: 3;
+}
+
+.hero-card-3 {
+  width: 48%;
+  bottom: 18%;
+  right: 0;
+  z-index: 1;
+}
+
+/* ---------- Danh mục game ---------- */
+
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: var(--space-4);
+}
+
+.game-card {
+  display: block;
+  overflow: hidden;
+  height: 100%;
+  color: var(--text);
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition),
+    border-color var(--transition);
+}
+
+.game-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.game-body {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.game-body h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.game-body p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+/* ---------- Lưới tin ---------- */
+
+.account-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-4);
+}
+
+.skeleton-card {
+  padding: 0 0 var(--space-4);
+  overflow: hidden;
+}
+
+.skeleton-thumb {
+  height: 190px;
+  border-radius: 0;
+}
+
+.skeleton-line {
+  height: 14px;
+  margin: var(--space-3) var(--space-4) 0;
+}
+
+.skeleton-line.short {
+  width: 55%;
+}
+
+/* ---------- Ưu đãi ---------- */
+
+.perk-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-4);
+}
+
+.perk {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  align-items: flex-start;
+}
+
+.perk-icon {
+  font-size: 1.7rem;
+  line-height: 1.2;
+  flex: none;
+}
+
+.perk h3 {
+  font-size: 1rem;
+  margin-bottom: var(--space-1);
+}
+
+.perk p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+@media (min-width: 860px) {
+  .hero {
+    grid-template-columns: 1.1fr 1fr;
+    padding-top: var(--space-6);
+  }
+
+  .hero-art {
+    display: block;
+  }
+}

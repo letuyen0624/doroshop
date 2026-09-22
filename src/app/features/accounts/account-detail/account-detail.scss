@@ -1,0 +1,233 @@
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  font-size: 0.86rem;
+  color: var(--text-subtle);
+}
+
+.breadcrumb a {
+  color: var(--text-muted);
+}
+
+.breadcrumb a:hover {
+  color: var(--accent-strong);
+}
+
+.breadcrumb .current {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.detail {
+  display: grid;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+/* ---------- Ảnh minh họa ---------- */
+
+.gallery-main {
+  position: relative;
+  overflow: hidden;
+}
+
+.floating {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  font-size: 0.9rem;
+  padding: 0.3rem 0.75rem;
+}
+
+.floating-right {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  font-size: 0.9rem;
+  padding: 0.3rem 0.75rem;
+}
+
+.gallery-skeleton {
+  height: 380px;
+}
+
+/* ---------- Thông tin ---------- */
+
+.info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.info h1 {
+  margin: 0;
+  font-size: clamp(1.4rem, 1.1rem + 1.4vw, 2rem);
+}
+
+.rating-row {
+  gap: var(--space-4);
+}
+
+.price-box {
+  padding: var(--space-4);
+  background: var(--surface-2);
+  box-shadow: none;
+  width: 100%;
+}
+
+.prices {
+  align-items: baseline;
+  gap: var(--space-3);
+}
+
+.price {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 1.4rem + 1.2vw, 2.2rem);
+  font-weight: 800;
+  color: var(--accent-strong);
+  line-height: 1.1;
+}
+
+.old-price {
+  color: var(--text-subtle);
+  text-decoration: line-through;
+  font-size: 1.05rem;
+}
+
+.price-note {
+  margin: var(--space-2) 0 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.quick-specs {
+  width: 100%;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--surface-2);
+  border-radius: var(--radius);
+}
+
+.quick-specs dt {
+  font-size: 0.78rem;
+  color: var(--text-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.quick-specs dd {
+  margin: 2px 0 0;
+  font-weight: 700;
+}
+
+.description {
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.buy-box {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-top: var(--space-2);
+  width: 100%;
+}
+
+.add-btn {
+  flex: 1;
+  min-width: 190px;
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
+}
+
+.assurances {
+  margin-top: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.assurances li {
+  position: relative;
+  padding-left: var(--space-5);
+}
+
+.assurances li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--success);
+  font-weight: 700;
+}
+
+/* ---------- Thông tin thêm & liên quan ---------- */
+
+.specs,
+.related {
+  margin-top: var(--space-7);
+}
+
+.specs-table {
+  min-width: 0;
+}
+
+.specs-table th {
+  width: 34%;
+  min-width: 130px;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.92rem;
+  color: var(--text);
+  background: var(--surface-2);
+  white-space: normal;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+.account-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: var(--space-4);
+}
+
+/* ---------- Skeleton ---------- */
+
+.line {
+  height: 18px;
+}
+.line.lg {
+  height: 34px;
+  width: 80%;
+}
+.line.short {
+  width: 45%;
+}
+.block {
+  height: 120px;
+}
+
+@media (min-width: 860px) {
+  .detail {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .gallery {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-5));
+  }
+}

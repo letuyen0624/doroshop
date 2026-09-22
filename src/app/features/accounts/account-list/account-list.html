@@ -1,0 +1,159 @@
+<div class="page container">
+  <div class="page-head">
+    <h1>Tất cả tài khoản</h1>
+    <p>Lọc theo game, rank và khoảng giá để tìm đúng acc bạn cần.</p>
+  </div>
+
+  <div class="layout">
+    <aside class="filters card" aria-labelledby="filters-title">
+      <div class="filters-head">
+        <h2 id="filters-title">Bộ lọc</h2>
+        @if (activeFilterCount() > 0) {
+          <button type="button" class="link-btn" (click)="clearFilters()">
+            Xóa lọc ({{ activeFilterCount() }})
+          </button>
+        }
+      </div>
+
+      <div class="field">
+        <label for="filter-search">Tìm kiếm</label>
+        <input
+          id="filter-search"
+          type="search"
+          class="input"
+          placeholder="Tên tin rao"
+          autocomplete="off"
+          [formControl]="searchControl"
+        />
+      </div>
+
+      <fieldset class="field games">
+        <legend>Game</legend>
+        @for (game of gameOptions; track game.id) {
+          @if (game.id !== 'khac') {
+            <label class="checkbox">
+              <input
+                type="checkbox"
+                [checked]="isGameSelected(game.id)"
+                (change)="toggleGame(game.id, $any($event.target).checked)"
+              />
+              <span>{{ game.name }}</span>
+            </label>
+          }
+        }
+      </fieldset>
+
+      <fieldset class="field ranks">
+        <legend>Rank</legend>
+        @for (rank of availableRanks; track rank) {
+          <label class="checkbox">
+            <input
+              type="checkbox"
+              [checked]="isRankSelected(rank)"
+              (change)="toggleRank(rank, $any($event.target).checked)"
+            />
+            <span>{{ rank }}</span>
+          </label>
+        }
+      </fieldset>
+
+      <form [formGroup]="filterForm" class="filter-form">
+        <fieldset class="field">
+          <legend>Khoảng giá (₫)</legend>
+          <div class="price-row">
+            <label class="sr-only" for="filter-min">Giá thấp nhất</label>
+            <input
+              id="filter-min"
+              type="number"
+              class="input"
+              min="0"
+              step="50000"
+              [attr.placeholder]="priceRange.min"
+              formControlName="minPrice"
+            />
+            <span aria-hidden="true">–</span>
+            <label class="sr-only" for="filter-max">Giá cao nhất</label>
+            <input
+              id="filter-max"
+              type="number"
+              class="input"
+              min="0"
+              step="50000"
+              [attr.placeholder]="priceRange.max"
+              formControlName="maxPrice"
+            />
+          </div>
+        </fieldset>
+
+        <label class="checkbox stock-toggle">
+          <input type="checkbox" formControlName="inStockOnly" />
+          <span>Chỉ hiện còn hàng</span>
+        </label>
+      </form>
+    </aside>
+
+    <section class="results" aria-labelledby="results-title">
+      <h2 id="results-title" class="sr-only">Kết quả tài khoản</h2>
+
+      <div class="toolbar">
+        <p class="result-count" role="status">
+          @if (loading()) {
+            Đang tải tài khoản...
+          } @else {
+            {{ resultLabel() }}
+          }
+        </p>
+
+        <div class="sort-form">
+          <label for="sort-select">Sắp xếp</label>
+          <select id="sort-select" class="select" [formControl]="sortControl">
+            @for (option of sortOptions; track option.value) {
+              <option [value]="option.value">{{ option.label }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      @if (failed()) {
+        <div class="error-state row">
+          <span>Không tải được danh sách tài khoản.</span>
+          <button type="button" class="btn btn-sm btn-ghost" (click)="retry()">Thử lại</button>
+        </div>
+      } @else if (loading()) {
+        <div class="account-grid" aria-hidden="true">
+          @for (item of skeletons; track $index) {
+            <div class="card skeleton-card">
+              <div class="skeleton skeleton-thumb"></div>
+              <div class="skeleton skeleton-line"></div>
+              <div class="skeleton skeleton-line short"></div>
+            </div>
+          }
+        </div>
+      } @else if (result(); as page) {
+        @if (page.items.length === 0) {
+          <div class="empty-state card">
+            <h3>Không tìm thấy tài khoản phù hợp</h3>
+            <p>Thử bỏ bớt một vài bộ lọc, mở rộng khoảng giá hoặc tìm với từ khóa ngắn hơn.</p>
+            <button type="button" class="btn" (click)="clearFilters()">Xóa toàn bộ bộ lọc</button>
+          </div>
+        } @else {
+          <div class="account-grid">
+            @for (account of page.items; track account.id) {
+              <app-account-card [account]="account" />
+            }
+          </div>
+
+          <app-pagination
+            [page]="page.page"
+            [totalPages]="page.totalPages"
+            (pageChange)="goToPage($event)"
+          />
+        }
+      }
+
+      <p class="browse-more">
+        Chưa biết bắt đầu từ đâu? <a routerLink="/">Quay lại trang chủ</a> để xem gợi ý theo game.
+      </p>
+    </section>
+  </div>
+</div>
