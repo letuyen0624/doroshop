@@ -1,0 +1,35 @@
+:host {
+  display: inline-flex;
+}
+
+.game-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 3px 10px 3px 3px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+
+.game-badge.compact {
+  padding: 3px;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  flex: none;
+  display: block;
+}
+
+.label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.compact .label {
+  display: none;
+}

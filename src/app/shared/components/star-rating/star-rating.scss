@@ -1,0 +1,36 @@
+:host {
+  display: inline-flex;
+}
+
+.rating {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.stars {
+  position: relative;
+  display: inline-block;
+  font-size: 1rem;
+  line-height: 1;
+  letter-spacing: 2px;
+  white-space: nowrap;
+}
+
+.stars-bg {
+  color: var(--border-strong);
+}
+
+.stars-fill {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  color: #f59e0b;
+}
+
+.value {
+  font-weight: 700;
+  color: var(--text);
+}
