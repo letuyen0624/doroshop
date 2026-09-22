@@ -1,0 +1,318 @@
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--header-height);
+  padding-top: var(--space-2);
+  padding-bottom: var(--space-2);
+}
+
+/* ---------- Logo ---------- */
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+}
+
+.logo-img {
+  height: 40px;
+  width: auto;
+  display: block;
+}
+
+/* ---------- Ô tìm kiếm ---------- */
+
+.search {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  max-width: 520px;
+  margin-left: auto;
+}
+
+.search .input {
+  padding-right: 3rem;
+  background: var(--surface-2);
+  border-color: transparent;
+}
+
+.search .input:focus {
+  background: var(--surface);
+}
+
+.search-btn {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: filter var(--transition);
+}
+
+.search-btn:hover {
+  filter: brightness(1.06);
+}
+
+/* ---------- Nhóm nút bên phải ---------- */
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: none;
+}
+
+.cart-btn {
+  position: relative;
+  text-decoration: none;
+}
+
+.cart-count {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: var(--radius-pill);
+  background: var(--danger);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--surface);
+}
+
+.user-menu {
+  position: relative;
+}
+
+.user-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 4px 10px 4px 4px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  max-width: 180px;
+  transition:
+    background var(--transition),
+    border-color var(--transition);
+}
+
+.user-trigger:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-strong);
+}
+
+.avatar {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.user-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  min-width: 230px;
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-lg);
+  animation: dropdown-in 140ms ease-out;
+}
+
+@keyframes dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-email {
+  padding: var(--space-2) var(--space-3);
+  font-size: 0.82rem;
+  color: var(--text-subtle);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--space-1);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown a,
+.dropdown .logout {
+  display: block;
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.92rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.dropdown a:hover,
+.dropdown .logout:hover {
+  background: var(--surface-hover);
+  color: var(--accent-strong);
+}
+
+.dropdown .logout {
+  color: var(--danger);
+  border-top: 1px solid var(--border);
+  margin-top: var(--space-1);
+}
+
+.menu-toggle {
+  display: none;
+}
+
+/* ---------- Thanh danh mục ---------- */
+
+.main-nav {
+  border-top: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.nav-inner::-webkit-scrollbar {
+  display: none;
+}
+
+.nav-inner a {
+  padding: var(--space-3) var(--space-3);
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  font-weight: 700;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition:
+    color var(--transition),
+    border-color var(--transition);
+}
+
+.nav-inner a:hover {
+  color: var(--accent-strong);
+}
+
+.nav-inner a.active {
+  color: var(--accent-strong);
+  border-bottom-color: var(--accent);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 900px) {
+  .user-name {
+    display: none;
+  }
+
+  .user-trigger {
+    padding: 4px;
+  }
+}
+
+@media (max-width: 720px) {
+  .bar {
+    flex-wrap: wrap;
+  }
+
+  .logo-img {
+    height: 32px;
+  }
+
+  .search {
+    order: 3;
+    flex-basis: 100%;
+    max-width: none;
+    margin-left: 0;
+    margin-bottom: var(--space-2);
+  }
+
+  .actions {
+    margin-left: auto;
+  }
+
+  .menu-toggle {
+    display: inline-flex;
+  }
+
+  .main-nav {
+    display: none;
+  }
+
+  .main-nav.open {
+    display: block;
+  }
+
+  .nav-inner {
+    flex-direction: column;
+    align-items: stretch;
+    padding-bottom: var(--space-2);
+  }
+
+  .nav-inner a {
+    border-bottom: 1px solid var(--border);
+    padding: var(--space-3) 0;
+  }
+
+  .nav-inner a.active {
+    border-bottom-color: var(--border);
+  }
+}

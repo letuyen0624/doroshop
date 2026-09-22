@@ -1,0 +1,149 @@
+<header class="site-header">
+  <div class="container bar">
+    <a class="logo" routerLink="/" aria-label="DoroShop, về trang chủ">
+      <img class="logo-img" src="assets/logo.png" alt="Logo DoroShop" />
+    </a>
+
+    <form class="search" role="search" (submit)="submitSearch($event)">
+      <label class="sr-only" for="header-search">Tìm kiếm tài khoản game</label>
+      <input
+        id="header-search"
+        type="search"
+        class="input"
+        placeholder="Tìm acc Liên Quân, LMHT, Free Fire..."
+        autocomplete="off"
+        [formControl]="searchControl"
+      />
+      <button type="submit" class="search-btn" aria-label="Tìm kiếm">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2" />
+          <line
+            x1="16.5"
+            y1="16.5"
+            x2="21"
+            y2="21"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+    </form>
+
+    <div class="actions">
+      <button
+        type="button"
+        class="icon-btn"
+        [attr.aria-label]="themeLabel()"
+        [title]="themeLabel()"
+        (click)="toggleTheme()"
+      >
+        @if (resolvedTheme() === 'dark') {
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="2" />
+            <g stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <line x1="12" y1="2" x2="12" y2="4" />
+              <line x1="12" y1="20" x2="12" y2="22" />
+              <line x1="2" y1="12" x2="4" y2="12" />
+              <line x1="20" y1="12" x2="22" y2="12" />
+              <line x1="4.9" y1="4.9" x2="6.3" y2="6.3" />
+              <line x1="17.7" y1="17.7" x2="19.1" y2="19.1" />
+              <line x1="4.9" y1="19.1" x2="6.3" y2="17.7" />
+              <line x1="17.7" y1="6.3" x2="19.1" y2="4.9" />
+            </g>
+          </svg>
+        } @else {
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <path
+              d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linejoin="round"
+            />
+          </svg>
+        }
+      </button>
+
+      <a class="icon-btn cart-btn" routerLink="/cart" [attr.aria-label]="cartLabel()">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+          <path
+            d="M4 5h2l2.2 10.2a2 2 0 0 0 2 1.6h6.6a2 2 0 0 0 2-1.5L20.5 8H7"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <circle cx="10.5" cy="20" r="1.4" fill="currentColor" />
+          <circle cx="17.5" cy="20" r="1.4" fill="currentColor" />
+        </svg>
+        @if (itemCount() > 0) {
+          <span class="cart-count" aria-hidden="true">{{ itemCount() }}</span>
+        }
+      </a>
+
+      @if (currentUser(); as user) {
+        <div class="user-menu">
+          <button
+            type="button"
+            class="user-trigger"
+            [attr.aria-expanded]="userMenuOpen()"
+            aria-haspopup="menu"
+            (click)="toggleUserMenu()"
+          >
+            <span class="avatar" aria-hidden="true">{{ user.name.charAt(0) }}</span>
+            <span class="user-name">{{ user.name }}</span>
+          </button>
+
+          @if (userMenuOpen()) {
+            <div class="dropdown card" role="menu">
+              <span class="dropdown-email">{{ user.email }}</span>
+              <a role="menuitem" routerLink="/account/orders" (click)="closeMenus()">Đơn hàng của tôi</a>
+              @if (isAdmin()) {
+                <a role="menuitem" routerLink="/admin" (click)="closeMenus()">Khu vực quản trị</a>
+              }
+              <button role="menuitem" type="button" class="logout" (click)="logout()">Đăng xuất</button>
+            </div>
+          }
+        </div>
+      } @else {
+        <a class="btn btn-sm login-btn" routerLink="/login">Đăng nhập</a>
+      }
+
+      <button
+        type="button"
+        class="icon-btn menu-toggle"
+        [attr.aria-expanded]="menuOpen()"
+        aria-controls="main-nav"
+        aria-label="Mở menu danh mục game"
+        (click)="toggleMenu()"
+      >
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+          <g stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="4" y1="7" x2="20" y2="7" />
+            <line x1="4" y1="12" x2="20" y2="12" />
+            <line x1="4" y1="17" x2="20" y2="17" />
+          </g>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <nav id="main-nav" class="main-nav" [class.open]="menuOpen()" aria-label="Danh mục game">
+    <div class="container nav-inner">
+      <a routerLink="/accounts" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        Tất cả acc
+      </a>
+      @for (game of games; track game.id) {
+        <a
+          [routerLink]="['/accounts']"
+          [queryParams]="{ games: game.id }"
+          routerLinkActive="active"
+        >
+          {{ game.name }}
+        </a>
+      }
+    </div>
+  </nav>
+</header>
