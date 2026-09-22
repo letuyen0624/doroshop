@@ -1,4 +1,4 @@
-![Logo DoroShop](src/assets/logo.png)
+![Logo DoroShop](src/assets/logo.webp)
 
 # DoroShop - Chợ acc game demo
 
