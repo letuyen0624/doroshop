@@ -17,7 +17,7 @@ function safeReturnUrl(url: string | undefined): string {
     <div class="container auth page">
       <div class="auth-card card">
         <div class="logo-mark">
-          <img src="assets/logo.webp" alt="Logo DoroShop" width="96" height="48" />
+          <img src="assets/logo.webp" alt="Logo DoroShop" width="260" height="130" />
         </div>
         <h1>Đăng nhập</h1>
         <p class="lead">Chào mừng bạn quay lại DoroShop.</p>

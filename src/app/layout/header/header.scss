@@ -25,9 +25,11 @@
 }
 
 .logo-img {
-  height: 40px;
+  height: 112px;
   width: auto;
   display: block;
+  /* Ảnh có viền trong suốt ~22% mỗi phía, bù lại để header không bị phình. */
+  margin: -32px 0;
 }
 
 /* ---------- Ô tìm kiếm ---------- */
@@ -274,7 +276,8 @@
   }
 
   .logo-img {
-    height: 32px;
+    height: 84px;
+    margin: -24px 0;
   }
 
   .search {
