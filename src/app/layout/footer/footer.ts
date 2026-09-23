@@ -13,6 +13,7 @@ import { GAMES } from '../../core/models';
       <div class="container grid">
         <section class="about">
           <img class="brand-logo" src="assets/logo.webp" alt="Logo DoroShop" width="240" height="120" />
+          <p class="slogan">Tìm acc không khó, đã có <strong>Doro</strong>! <span class="heart" aria-hidden="true">♥</span></p>
           <p>
             Chợ acc game demo với Liên Quân, Liên Minh Huyền Thoại, Free Fire, Valorant, PUBG Mobile,
             Genshin Impact và nhiều game khác. Đây là dự án học tập, toàn bộ tài khoản đều là dữ liệu

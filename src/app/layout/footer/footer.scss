@@ -29,6 +29,24 @@
   max-width: 42ch;
 }
 
+.about .slogan {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.about .slogan .heart {
+  color: var(--accent);
+}
+
+.about .slogan strong {
+  background: linear-gradient(120deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 .disclaimer {
   padding: var(--space-3);
   border-radius: var(--radius-sm);

@@ -3,7 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { RouterStateSnapshot, TitleStrategy } from '@angular/router';
 
 const SITE_NAME = 'DoroShop';
-const TAGLINE = 'Chợ acc game demo';
+const TAGLINE = 'Tìm acc không khó, đã có Doro';
 
 /** Gắn hậu tố tên trang vào tiêu đề của mọi trang. */
 @Injectable()
