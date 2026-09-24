@@ -119,6 +119,11 @@
   flex: none;
 }
 
+/* Nút nhỏ nên chữ trắng che gần hết chiều ngang; thêm padding ngang để cả hai tông hồng-tím của gradient lộ rõ. */
+.login-btn {
+  padding-inline: 1.5rem;
+}
+
 .cart-btn {
   position: relative;
   text-decoration: none;
