@@ -30,6 +30,42 @@
   display: block;
   /* Ảnh có viền trong suốt ~22% mỗi phía, bù lại để header không bị phình. */
   margin: -32px 0;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+/* Chuyển động nhẹ cho logo, chỉ bật khi người dùng không yêu cầu giảm chuyển động. */
+@media (prefers-reduced-motion: no-preference) {
+  .logo-img {
+    animation: doro-float 3s ease-in-out infinite;
+  }
+
+  .logo-img:hover {
+    animation: doro-wiggle 0.5s ease-in-out;
+  }
+
+  @keyframes doro-float {
+    0%,
+    100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-5px) rotate(-2deg);
+    }
+  }
+
+  @keyframes doro-wiggle {
+    0%,
+    100% {
+      transform: rotate(0deg);
+    }
+    25% {
+      transform: rotate(-10deg);
+    }
+    75% {
+      transform: rotate(10deg);
+    }
+  }
 }
 
 /* ---------- Ô tìm kiếm ---------- */
