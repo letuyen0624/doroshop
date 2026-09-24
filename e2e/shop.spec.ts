@@ -96,7 +96,8 @@ test.describe('duyệt và lọc tài khoản', () => {
   test('tài khoản đã bán không thêm được vào giỏ', async ({ page }) => {
     await page.goto('/accounts/acc-lien-quan-rank-kim-cuong-60-tuong');
     await expect(page.getByText('Đã bán').first()).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Đã bán' })).toBeDisabled();
+    // Chỉ xét nút mua của tin đang xem; tin liên quan bên dưới cũng có thể có nút 'Đã bán'.
+    await expect(page.locator('.buy-box').getByRole('button', { name: 'Đã bán' })).toBeDisabled();
   });
 
   test('đường dẫn sai hiện trang 404 và slug sai báo không tìm thấy', async ({ page }) => {
@@ -255,7 +256,7 @@ test.describe('khu vực admin', () => {
     await expect(page.locator('.stat').nth(3).locator('.stat-value')).toHaveText('6');
     await expect(page.locator('.bar-col')).toHaveCount(7);
     await expect(page.getByRole('heading', { name: 'Số tin theo từng game' })).toBeVisible();
-    await expect(page.locator('.game-bars li')).toHaveCount(6);
+    await expect(page.locator('.game-bars li')).toHaveCount(5);
   });
 
   test('lọc đơn theo trạng thái, xem chi tiết và đổi trạng thái', async ({ page }) => {

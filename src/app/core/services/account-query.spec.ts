@@ -41,8 +41,8 @@ describe('account-query', () => {
     });
 
     it('lọc nhiều game cùng lúc (hoặc)', () => {
-      const result = filterAccounts(ACCOUNTS_SEED, query({ games: ['free-fire', 'pubg-mobile'] }));
-      expect(new Set(result.map((account) => account.game))).toEqual(new Set(['free-fire', 'pubg-mobile']));
+      const result = filterAccounts(ACCOUNTS_SEED, query({ games: ['free-fire', 'genshin-impact'] }));
+      expect(new Set(result.map((account) => account.game))).toEqual(new Set(['free-fire', 'genshin-impact']));
     });
 
     it('lọc theo rank', () => {
@@ -164,6 +164,28 @@ describe('GameAccountService', () => {
 
     expect(page.items).toHaveLength(2);
     expect(page.items.every((account) => account.game === 'valorant')).toBe(true);
+  });
+
+  it('gameCount và availableCount tính động từ dữ liệu, không gõ số cứng', async () => {
+    const service = TestBed.inject(GameAccountService);
+    const distinctGames = new Set(ACCOUNTS_SEED.map((account) => account.game)).size;
+    const inStock = ACCOUNTS_SEED.filter((account) => account.status === 'con_hang').length;
+
+    expect(service.gameCount()).toBe(distinctGames);
+    expect(service.availableCount()).toBe(inStock);
+
+    // Xóa toàn bộ tin của một game thì số game giảm đi, không cần sửa tay ở đâu cả.
+    const valorantIds = ACCOUNTS_SEED.filter((account) => account.game === 'valorant').map((a) => a.id);
+    for (const id of valorantIds) {
+      await firstValueFrom(service.remove(id));
+    }
+    expect(service.gameCount()).toBe(distinctGames - 1);
+  });
+
+  it('dữ liệu mẫu không còn tin nào của PUBG Mobile và vẫn có ít nhất 24 tin', () => {
+    expect(ACCOUNTS_SEED.length).toBeGreaterThanOrEqual(24);
+    expect(ACCOUNTS_SEED.some((account) => (account.game as string) === 'pubg-mobile')).toBe(false);
+    expect(ACCOUNTS_SEED.some((account) => /pubg/i.test(account.title))).toBe(false);
   });
 
   it('getBySlug báo lỗi khi không tìm thấy', async () => {

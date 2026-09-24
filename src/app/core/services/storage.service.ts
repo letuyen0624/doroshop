@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 /** Tiền tố và phiên bản dữ liệu, đổi version sẽ bỏ qua dữ liệu cũ không tương thích. */
 const PREFIX = 'doroshop';
-const VERSION = 'v1';
+const VERSION = 'v2';
 
 /**
  * Bọc localStorage để toàn bộ ứng dụng đọc ghi qua một chỗ duy nhất.

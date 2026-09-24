@@ -8,7 +8,7 @@
 > dịch thật** - không có backend, không có cổng thanh toán, không thu thập thông tin thật.
 
 DoroShop là một "chợ" mua bán tài khoản game phong cách kawaii: Liên Quân Mobile, Liên Minh Huyền
-Thoại, Free Fire, Valorant, PUBG Mobile, Genshin Impact và nhiều game khác. Mọi dữ liệu nằm trong
+Thoại, Free Fire, Valorant, Genshin Impact và nhiều game khác. Mọi dữ liệu nằm trong
 `localStorage` của trình duyệt.
 
 Công nghệ: Angular 22 (standalone components, signals, control flow `@if/@for/@switch`, `inject()`),
@@ -54,7 +54,7 @@ src/app/
     models/      GameAccount, CartItem, User, Order, DeliveredCredential...
     services/    Storage, GameAccount, Cart, Auth, Order, Toast, Theme
     guards/      authGuard, adminGuard
-    data/        dữ liệu mẫu (27 tài khoản, 6 đơn hàng)
+    data/        dữ liệu mẫu (27 tài khoản thuộc 5 game, 6 đơn hàng)
   shared/        component dùng chung (AccountCard, AccountArt, GameBadge...), pipe vnd, validators
   layout/        header, footer
   features/      home, accounts, cart, checkout, auth, account, admin, not-found

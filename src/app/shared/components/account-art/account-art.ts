@@ -66,9 +66,6 @@ let uidCounter = 0;
             <circle cx="16" cy="16" r="7" />
             <circle cx="16" cy="16" r="2.5" />
           }
-          @case ('star') {
-            <path d="M16 8l2.4 5 5.6.6-4.2 3.8 1.2 5.6L16 20l-5 3 1.2-5.6-4.2-3.8 5.6-.6z" />
-          }
           @case ('gem') {
             <path d="M9 13 16 8l7 5-7 11z" />
             <path d="M9 13h14M12.5 13 16 24l3.5-11" />

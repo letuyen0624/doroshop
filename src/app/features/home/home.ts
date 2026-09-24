@@ -19,6 +19,8 @@ export class Home {
   private readonly destroyRef = inject(DestroyRef);
 
   protected readonly games = GAMES;
+  protected readonly gameCount = this.accountService.gameCount;
+  protected readonly availableCount = this.accountService.availableCount;
 
   protected readonly featured = signal<GameAccount[]>([]);
   protected readonly onSale = signal<GameAccount[]>([]);

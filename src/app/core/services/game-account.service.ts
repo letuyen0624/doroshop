@@ -1,4 +1,4 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import { Observable, delay, of, throwError } from 'rxjs';
 import { ACCOUNTS_SEED } from '../data/accounts.seed';
 import { GameAccount, GameAccountDraft } from '../models';
@@ -41,6 +41,14 @@ export class GameAccountService {
 
   /** Snapshot đồng bộ, dùng cho giỏ hàng và thống kê admin. */
   readonly all = this.accounts.asReadonly();
+
+  /** Số tin đang còn hàng, tính động từ dữ liệu thật. */
+  readonly availableCount = computed(
+    () => this.accounts().filter((account) => account.status === 'con_hang').length,
+  );
+
+  /** Số tựa game khác nhau đang có tin rao, thêm/bớt game không cần sửa tay ở giao diện. */
+  readonly gameCount = computed(() => new Set(this.accounts().map((account) => account.game)).size);
 
   /** Danh sách rank hiện có, đã sắp xếp theo bảng chữ cái. */
   ranks(): string[] {

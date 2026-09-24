@@ -14,7 +14,10 @@
         />
       </h1>
       <p class="hero-lead">
-        Acc game ưng ý, giá dễ thương — cho Liên Quân, LMHT, Free Fire và nhiều game khác.
+        DoroShop là chợ trung gian tài khoản game giá tốt, đa dạng tựa game — từ Liên Quân, LMHT, Free
+        Fire đến Valorant, Genshin Impact và nhiều game khác. Mỗi tài khoản đều được kiểm tra rõ thông
+        tin (rank, tướng/skin, server) trước khi đăng bán, thanh toán an toàn và nhận ngay sau khi đặt
+        hàng — không như mua bán tay đôi qua tin nhắn dễ gặp rủi ro lừa đảo.
       </p>
       <ul class="plain hero-perks" aria-label="Điểm nổi bật của DoroShop">
         <li>
@@ -27,7 +30,7 @@
         </li>
         <li>
           <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="3" y="7" width="18" height="11" rx="5.5" fill="none" stroke="currentColor" stroke-width="2" /><path d="M8 10.5v4M6 12.5h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" /><circle cx="15.5" cy="11.5" r="1" fill="currentColor" /><circle cx="17.5" cy="13.5" r="1" fill="currentColor" /></svg>
-          6+ tựa game
+          {{ gameCount() }} tựa game
         </li>
       </ul>
       <div class="row">
@@ -38,11 +41,11 @@
       </div>
       <dl class="hero-stats">
         <div>
-          <dt>27+</dt>
+          <dt>{{ availableCount() }}</dt>
           <dd>tin đang rao</dd>
         </div>
         <div>
-          <dt>6</dt>
+          <dt>{{ gameCount() }}</dt>
           <dd>tựa game</dd>
         </div>
         <div>

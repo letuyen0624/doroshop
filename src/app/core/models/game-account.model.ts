@@ -4,7 +4,6 @@ export type GameId =
   | 'lien-minh-huyen-thoai'
   | 'free-fire'
   | 'valorant'
-  | 'pubg-mobile'
   | 'genshin-impact'
   | 'khac';
 
@@ -50,7 +49,6 @@ export const GAMES: readonly Game[] = [
   { id: 'lien-minh-huyen-thoai', name: 'Liên Minh Huyền Thoại', description: 'MOBA huyền thoại trên PC' },
   { id: 'free-fire', name: 'Free Fire', description: 'Sinh tồn bắn súng nhịp độ nhanh' },
   { id: 'valorant', name: 'Valorant', description: 'Bắn súng chiến thuật 5vs5' },
-  { id: 'pubg-mobile', name: 'PUBG Mobile', description: 'Sinh tồn 100 người trên di động' },
   { id: 'genshin-impact', name: 'Genshin Impact', description: 'Nhập vai thế giới mở' },
   { id: 'khac', name: 'Khác', description: 'Các game khác' },
 ] as const;

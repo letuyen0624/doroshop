@@ -19,7 +19,7 @@ const SPECS: readonly SeedSpec[] = [
   { daysAgo: 9, status: 'delivered', payment: 'bank', accountId: 'acc-008', coupon: 'DORO10' },
   { daysAgo: 7, status: 'delivered', payment: 'wallet', accountId: 'acc-012' },
   { daysAgo: 4, status: 'confirmed', payment: 'cod', accountId: 'acc-016' },
-  { daysAgo: 2, status: 'cancelled', payment: 'bank', accountId: 'acc-020' },
+  { daysAgo: 2, status: 'cancelled', payment: 'bank', accountId: 'acc-028' },
   { daysAgo: 1, status: 'pending', payment: 'wallet', accountId: 'acc-024' },
 ];
 
