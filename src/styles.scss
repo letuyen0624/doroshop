@@ -22,6 +22,10 @@
 
   --text: #3f1530;
   --text-muted: #8a5c78;
+  /* Chữ mô tả chính: đậm hơn text-muted, tương phản 7.5:1 trên nền --bg */
+  --text-body: #6f4460;
+  /* Chữ nhấn hồng cỡ nhỏ: 5.7:1 trên nền --bg (accent-strong chỉ 4.4:1) */
+  --accent-text: #be185d;
   --text-subtle: #b389a3;
 
   --border: #f7d6e6;
@@ -81,6 +85,8 @@
 
   --text: #fbe6f2;
   --text-muted: #d9a9c6;
+  --text-body: #e6c3d8;
+  --accent-text: #f9a8d4;
   --text-subtle: #a97e97;
 
   --border: #4a2941;

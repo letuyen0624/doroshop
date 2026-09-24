@@ -40,11 +40,34 @@
   margin: var(--space-3) 0;
 }
 
-.hero-text > p {
-  color: var(--text-muted);
-  max-width: 52ch;
-  margin-bottom: var(--space-5);
-  font-size: 1.05rem;
+.hero-lead {
+  color: var(--text-body);
+  max-width: 46ch;
+  margin: 0 0 var(--space-3);
+  font-size: 1.1rem;
+  line-height: 1.55;
+}
+
+/* Hàng tính năng gọn: icon + chữ nhấn hồng, tự xuống dòng trên màn hình hẹp */
+.hero-perks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  margin: 0 0 var(--space-5);
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--accent-text);
+}
+
+.hero-perks li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hero-perks svg {
+  flex: none;
+  color: var(--accent-2-strong);
 }
 
 .hero-stats {

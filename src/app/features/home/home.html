@@ -13,10 +13,23 @@
           height="667"
         />
       </h1>
-      <p>
-        Acc game ưng ý, giá dễ thương: Liên Quân, Liên Minh Huyền Thoại, Free Fire, Valorant, PUBG
-        Mobile, Genshin Impact và nhiều game khác. Bàn giao ngay sau khi thanh toán, bảo hành rõ ràng.
+      <p class="hero-lead">
+        Acc game ưng ý, giá dễ thương — cho Liên Quân, LMHT, Free Fire và nhiều game khác.
       </p>
+      <ul class="plain hero-perks" aria-label="Điểm nổi bật của DoroShop">
+        <li>
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2" /><path d="M8 12.5l2.7 2.7L16 9.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          Bàn giao ngay
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 3l7 3v5.5c0 4.3-2.9 7.6-7 9.5-4.1-1.9-7-5.2-7-9.5V6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" /><path d="M9 12l2.2 2.2L15.2 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          Bảo hành rõ ràng
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="3" y="7" width="18" height="11" rx="5.5" fill="none" stroke="currentColor" stroke-width="2" /><path d="M8 10.5v4M6 12.5h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" /><circle cx="15.5" cy="11.5" r="1" fill="currentColor" /><circle cx="17.5" cy="13.5" r="1" fill="currentColor" /></svg>
+          6+ tựa game
+        </li>
+      </ul>
       <div class="row">
         <a class="btn" routerLink="/accounts">Xem tất cả acc</a>
         <a class="btn btn-ghost" [routerLink]="['/accounts']" [queryParams]="{ sort: 'price-asc' }">
