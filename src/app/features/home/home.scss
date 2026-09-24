@@ -89,23 +89,12 @@
   background: var(--accent-soft);
   box-shadow: var(--shadow-lg);
   transform: rotate(2deg);
-  animation: mascot-float 4.5s ease-in-out infinite;
 }
 
 .mascot-img {
   display: block;
   width: 100%;
   height: auto;
-}
-
-@keyframes mascot-float {
-  0%,
-  100% {
-    transform: translateY(0) rotate(2deg);
-  }
-  50% {
-    transform: translateY(-10px) rotate(-1deg);
-  }
 }
 
 .deco {
