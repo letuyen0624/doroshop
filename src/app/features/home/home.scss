@@ -67,7 +67,7 @@
 
 .hero-perks svg {
   flex: none;
-  color: var(--accent-2-strong);
+  color: var(--accent-2);
 }
 
 .hero-stats {
@@ -123,18 +123,18 @@
 .deco {
   position: absolute;
   pointer-events: none;
-  filter: drop-shadow(0 2px 4px rgba(219, 39, 119, 0.25));
+  filter: drop-shadow(0 2px 4px rgba(183, 87, 122, 0.25));
 }
 
 .deco-heart {
   top: 6%;
   left: 12%;
   font-size: 2rem;
-  color: var(--accent-2);
+  color: var(--brand-lavender);
 }
 
 .deco-star {
-  color: var(--accent);
+  color: var(--brand-pink);
 }
 
 .deco-star-1 {

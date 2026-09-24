@@ -92,7 +92,7 @@ e2e/             test Playwright
   đăng nhập (chỉ chấp nhận đường dẫn nội bộ).
 - Giao diện sáng/tối mặc định theo hệ thống, nhớ lựa chọn; ở chế độ tối vẫn giữ tông hồng-tím nhưng
   đổi sang nền tối để không chói mắt; tôn trọng `prefers-reduced-motion`.
-- Màu gradient hồng-tím của mọi nút chính nằm ở **một nguồn duy nhất** trong `src/styles.scss`: `--gradient-from`, `--gradient-to`, `--gradient-primary`, `--on-gradient` (chữ trắng đạt tối thiểu 4.68:1 trên toàn dải gradient; màu lấy từ logo: hồng `#fba3c3` và tím `#aa91c7`, hạ độ sáng vừa đủ để đạt AA; chế độ tối dùng thẳng hai màu pastel đó với chữ đậm). Muốn đổi màu thương hiệu chỉ cần sửa hai giá trị from/to.
+- Bảng màu chỉ có **một tông pastel** duy nhất, khai báo ở đầu `src/styles.scss`: hai màu gốc lấy từ logo và chữ slogan là `--brand-pink #fba3c3` (338°) và `--brand-lavender #d6b9f4` (269°). Bản dùng cho chữ/icon/nút là cùng hue, bão hòa thấp (~40%), chỉ hạ độ sáng vừa đủ đạt WCAG AA (chữ >= 4.5:1, icon >= 3:1): `--accent-strong #ab496d`, `--accent #c06d8b`, `--accent-2 #9d77c5`. Gradient nút chính là `--gradient-from #b7577a` → `--gradient-to #8d62bc` (`--gradient-primary`, chữ trắng tối thiểu 4.51:1 trên toàn dải); chế độ tối dùng thẳng cặp pastel gốc với chữ đậm. Muốn đổi màu thương hiệu chỉ cần sửa các biến này.
 - Form thêm/sửa tin rao dùng `FormArray` để thêm/xóa từng dòng `extraInfo` (thông tin tự do) trực
   tiếp trên giao diện, không phải nhập dạng văn bản thô.
 

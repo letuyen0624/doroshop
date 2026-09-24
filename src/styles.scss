@@ -6,23 +6,32 @@
 :root {
   color-scheme: light;
 
-  --accent: #f472b6;
-  --accent-strong: #db2777;
+  /* Hai màu pastel gốc của thương hiệu (đo từ logo và chữ slogan):
+       hồng     #fba3c3  (338°)
+       lavender #d6b9f4  (269°)
+     Dùng nguyên bản cho trang trí (ngôi sao, trái tim, chế độ tối).
+     Các sắc bên dưới là CÙNG hue, giữ độ bão hòa thấp (~40%), chỉ hạ độ sáng
+     vừa đủ để đọc được: chữ >= 4.5:1, icon/viền >= 3:1 (WCAG AA) trên nền sáng. */
+  --brand-pink: #fba3c3;
+  --brand-lavender: #d6b9f4;
+
+  --accent: #c06d8b; /* icon, viền, nhấn: 3.08:1 */
+  --accent-strong: #ab496d; /* chữ nhấn, số liệu, giá: 4.57:1 */
   --accent-soft: #fce7f3;
   --accent-contrast: #ffffff;
 
-  --accent-2: #a78bfa;
-  --accent-2-strong: #7c3aed;
+  --accent-2: #9d77c5; /* icon, viền focus lavender: 3.04:1 */
+  --accent-2-strong: #7f58a8; /* chữ lavender: >= 4.5:1 */
   --accent-2-soft: #ede9fe;
 
   /* Gradient chính dùng chung cho mọi nút/thành phần nền hồng-tím.
-     Lấy từ màu thật của logo: hồng #fba3c3 (338°) và tím #aa91c7 (268°, 33%).
-     Hạ độ sáng vừa đủ để chữ trắng đạt tối thiểu 4.68:1 (WCAG AA) trên toàn dải:
-       hồng  #ce3b71 = hue 338° của logo, bão hòa 60%
-       tím   #8763b0 = hue 268° và bão hòa 33% của logo
+     Cặp pastel gốc (--brand-pink, --brand-lavender) hạ độ sáng vừa đủ để chữ trắng
+     đạt tối thiểu 4.5:1 (WCAG AA) trên toàn dải, giữ nguyên hue, bão hòa ~40%:
+       hồng      #b7577a (338°)
+       lavender  #8d62bc (269°)
      Muốn đổi màu thương hiệu thì chỉ cần sửa hai giá trị from/to. */
-  --gradient-from: #ce3b71;
-  --gradient-to: #8763b0;
+  --gradient-from: #b7577a;
+  --gradient-to: #8d62bc;
   --gradient-primary: linear-gradient(135deg, var(--gradient-from), var(--gradient-to));
   --on-gradient: #ffffff;
   /* Hover làm tối nhẹ để chữ trắng không bị giảm tương phản */
@@ -37,8 +46,8 @@
   --text-muted: #8a5c78;
   /* Chữ mô tả chính: đậm hơn text-muted, tương phản 7.5:1 trên nền --bg */
   --text-body: #6f4460;
-  /* Chữ nhấn hồng cỡ nhỏ: 5.7:1 trên nền --bg (accent-strong chỉ 4.4:1) */
-  --accent-text: #be185d;
+  /* Chữ nhấn hồng cỡ nhỏ, cùng tông với --accent-strong */
+  --accent-text: #ab496d;
   --text-subtle: #b389a3;
 
   --border: #f7d6e6;
@@ -53,9 +62,9 @@
   --info: #0891b2;
   --info-soft: #cffafe;
 
-  --shadow-sm: 0 2px 6px rgba(219, 39, 119, 0.08);
-  --shadow: 0 10px 26px rgba(219, 39, 119, 0.14);
-  --shadow-lg: 0 22px 48px rgba(219, 39, 119, 0.2);
+  --shadow-sm: 0 2px 6px rgba(183, 87, 122, 0.08);
+  --shadow: 0 10px 26px rgba(183, 87, 122, 0.14);
+  --shadow-lg: 0 22px 48px rgba(183, 87, 122, 0.2);
 
   --radius-sm: 12px;
   --radius: 18px;
@@ -82,18 +91,18 @@
 :root[data-theme="dark"] {
   color-scheme: dark;
 
-  --accent: #f9a8d4;
+  --accent: #fba3c3;
   --accent-strong: #fbcfe8;
   --accent-soft: #4a1942;
   --accent-contrast: #2a0a24;
 
-  --accent-2: #c4b5fd;
-  --accent-2-strong: #ddd6fe;
+  --accent-2: #d6b9f4;
+  --accent-2-strong: #d6b9f4;
   --accent-2-soft: #35245c;
 
   /* Chế độ tối: dùng đúng màu pastel của logo trên nền tối, chữ đậm (tối thiểu 6:1) */
   --gradient-from: #fba3c3;
-  --gradient-to: #aa91c7;
+  --gradient-to: #d6b9f4;
   --on-gradient: #2a0a24;
   --gradient-hover-filter: brightness(1.08);
 
@@ -105,7 +114,7 @@
   --text: #fbe6f2;
   --text-muted: #d9a9c6;
   --text-body: #e6c3d8;
-  --accent-text: #f9a8d4;
+  --accent-text: #fba3c3;
   --text-subtle: #a97e97;
 
   --border: #4a2941;
@@ -588,7 +597,7 @@ table.data tbody tr:hover {
 
 .sparkle {
   display: inline-block;
-  filter: drop-shadow(0 2px 4px rgba(219, 39, 119, 0.25));
+  filter: drop-shadow(0 2px 4px rgba(183, 87, 122, 0.25));
 }
 
 @media (prefers-reduced-motion: reduce) {
