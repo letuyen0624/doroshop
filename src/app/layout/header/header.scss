@@ -97,8 +97,8 @@
   height: 36px;
   border: none;
   border-radius: var(--radius-sm);
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  color: #fff;
+  background: var(--gradient-primary);
+  color: var(--on-gradient);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -107,7 +107,7 @@
 }
 
 .search-btn:hover {
-  filter: brightness(1.06);
+  filter: var(--gradient-hover-filter);
 }
 
 /* ---------- Nhóm nút bên phải ---------- */
@@ -175,8 +175,8 @@
   width: 32px;
   height: 32px;
   border-radius: var(--radius-pill);
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  color: #fff;
+  background: var(--gradient-primary);
+  color: var(--on-gradient);
   display: inline-flex;
   align-items: center;
   justify-content: center;

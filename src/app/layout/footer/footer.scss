@@ -41,7 +41,7 @@
 }
 
 .about .slogan strong {
-  background: linear-gradient(120deg, var(--accent), var(--accent-2));
+  background: linear-gradient(120deg, var(--gradient-from), var(--gradient-to));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

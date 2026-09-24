@@ -26,9 +26,9 @@
 }
 
 .chip.active {
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  background: var(--gradient-primary);
   border-color: transparent;
-  color: #fff;
+  color: var(--on-gradient);
 }
 
 .sub {

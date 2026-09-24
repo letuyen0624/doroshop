@@ -15,6 +15,16 @@
   --accent-2-strong: #7c3aed;
   --accent-2-soft: #ede9fe;
 
+  /* Gradient chính dùng chung cho mọi nút/thành phần nền hồng-tím.
+     Chữ trắng trên gradient này đạt tối thiểu 4.84:1 (WCAG AA) ở mọi điểm.
+     Muốn đổi màu thương hiệu thì chỉ cần sửa hai giá trị from/to. */
+  --gradient-from: #d6246f;
+  --gradient-to: #7c3aed;
+  --gradient-primary: linear-gradient(135deg, var(--gradient-from), var(--gradient-to));
+  --on-gradient: #ffffff;
+  /* Hover làm tối nhẹ để chữ trắng không bị giảm tương phản */
+  --gradient-hover-filter: brightness(0.92);
+
   --bg: #fff7fb;
   --surface: #ffffff;
   --surface-2: #fdf1f7;
@@ -77,6 +87,12 @@
   --accent-2: #c4b5fd;
   --accent-2-strong: #ddd6fe;
   --accent-2-soft: #35245c;
+
+  /* Chế độ tối: gradient pastel sáng trên nền tối, chữ đậm (9.7:1) */
+  --gradient-from: #f9a8d4;
+  --gradient-to: #c4b5fd;
+  --on-gradient: #2a0a24;
+  --gradient-hover-filter: brightness(1.08);
 
   --bg: #1c0f1a;
   --surface: #2a1727;
@@ -232,8 +248,8 @@ ul.plain {
   padding: 0.7rem 1.25rem;
   border-radius: var(--radius-pill);
   border: 1px solid transparent;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  color: var(--accent-contrast);
+  background: var(--gradient-primary);
+  color: var(--on-gradient);
   font: inherit;
   font-family: var(--font-display);
   font-weight: 700;
@@ -249,7 +265,7 @@ ul.plain {
 }
 
 .btn:hover:not(:disabled) {
-  filter: brightness(1.06);
+  filter: var(--gradient-hover-filter);
   transform: translateY(-1px);
   box-shadow: var(--shadow);
 }
