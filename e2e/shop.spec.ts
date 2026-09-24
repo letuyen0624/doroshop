@@ -12,7 +12,7 @@ const accountCards = (page: Page) => page.locator('app-account-card');
 test.describe('duyệt và lọc tài khoản', () => {
   test('trang chủ hiện banner, danh mục game và tin', async ({ page }) => {
     await page.goto('/');
-    await expect(page).toHaveTitle('Trang chủ | DoroShop');
+    await expect(page).toHaveTitle('DoroShop – Shop acc uy tín');
     await expect(page.getByRole('heading', { level: 1 })).toContainText('Tìm acc không khó, đã có Doro');
     await expect(page.getByRole('heading', { name: 'Chọn theo tựa game' })).toBeVisible();
     await expect(accountCards(page).first()).toBeVisible();

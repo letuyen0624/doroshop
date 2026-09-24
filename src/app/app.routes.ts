@@ -3,12 +3,12 @@ import { authGuard } from './core/guards';
 
 /**
  * Mọi màn hình đều nạp động (lazy) để gói khởi động nhẹ nhất có thể.
- * Tiêu đề trang khai báo ngay tại route và được TitleStrategy gắn hậu tố "| DoroShop".
+ * Tiêu đề trang khai báo ngay tại route và được TitleStrategy gắn hậu tố "| DoroShop" (riêng trang chủ dùng tiêu đề mặc định).
  */
 export const routes: Routes = [
   {
     path: '',
-    title: 'Trang chủ',
+    // Không khai báo title: trang chủ dùng tiêu đề mặc định trong TitleStrategy.
     loadComponent: () => import('./features/home/home').then((m) => m.Home),
   },
   {
