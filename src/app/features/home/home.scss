@@ -123,18 +123,18 @@
 .deco {
   position: absolute;
   pointer-events: none;
-  filter: drop-shadow(0 2px 4px rgba(183, 87, 122, 0.25));
+  filter: drop-shadow(0 2px 4px color-mix(in srgb, var(--color-primary-strong) 30%, transparent));
 }
 
 .deco-heart {
   top: 6%;
   left: 12%;
   font-size: 2rem;
-  color: var(--brand-lavender);
+  color: var(--color-secondary);
 }
 
 .deco-star {
-  color: var(--brand-pink);
+  color: var(--color-primary);
 }
 
 .deco-star-1 {

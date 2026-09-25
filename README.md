@@ -92,7 +92,7 @@ e2e/             test Playwright
   đăng nhập (chỉ chấp nhận đường dẫn nội bộ).
 - Giao diện sáng/tối mặc định theo hệ thống, nhớ lựa chọn; ở chế độ tối vẫn giữ tông hồng-tím nhưng
   đổi sang nền tối để không chói mắt; tôn trọng `prefers-reduced-motion`.
-- Bảng màu chỉ có **một tông pastel** duy nhất, khai báo ở đầu `src/styles.scss`: hai màu gốc lấy từ logo và chữ slogan là `--brand-pink #fba3c3` (338°) và `--brand-lavender #d6b9f4` (269°). Bản dùng cho chữ/icon/nút là cùng hue, bão hòa thấp (~40%), chỉ hạ độ sáng vừa đủ đạt WCAG AA (chữ >= 4.5:1, icon >= 3:1): `--accent-strong #ab496d`, `--accent #c06d8b`, `--accent-2 #9d77c5`. Gradient nút chính là `--gradient-from #b7577a` → `--gradient-to #8d62bc` (`--gradient-primary`, chữ trắng tối thiểu 4.51:1 trên toàn dải); chế độ tối dùng thẳng cặp pastel gốc với chữ đậm. Muốn đổi màu thương hiệu chỉ cần sửa các biến này.
+- Mọi màu hồng/tím của trang xuất phát từ **hai biến gốc** ở đầu `src/styles.scss`, lấy từ logo: `--color-primary #F5A6C7` (hồng, tóc Doro) và `--color-secondary #AE91C7` (tím, trái tim). Các sắc đậm/nhạt (`--color-primary-strong #B25781`, `--color-primary-ink #9B436C`, `--color-secondary-strong #8965A6`, `--color-secondary-ink #745190`, các sắc `-soft`/`-light`) được suy ra bằng cách đổi độ sáng trong OKLCH, giữ nguyên hue. Chữ trắng trên gradient nút đạt tối thiểu 4.59:1, chữ hồng/tím cỡ nhỏ >= 5.1:1 (WCAG AA). Muốn đổi màu thương hiệu chỉ cần sửa các biến này.
 - Form thêm/sửa tin rao dùng `FormArray` để thêm/xóa từng dòng `extraInfo` (thông tin tự do) trực
   tiếp trên giao diện, không phải nhập dạng văn bản thô.
 
