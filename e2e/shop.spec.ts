@@ -93,7 +93,7 @@ test.describe('duyệt và lọc tài khoản', () => {
     await expect(accountCards(page)).toHaveCount(4);
   });
 
-  test('tài khoản đã bán không thêm được vào giỏ', async ({ page }) => {
+  test('tài khoản đã bán không mua được', async ({ page }) => {
     await page.goto('/accounts/acc-lien-quan-rank-kim-cuong-60-tuong');
     await expect(page.getByText('Đã bán').first()).toBeVisible();
     // Chỉ xét nút mua của tin đang xem; tin liên quan bên dưới cũng có thể có nút 'Đã bán'.
@@ -110,34 +110,13 @@ test.describe('duyệt và lọc tài khoản', () => {
   });
 });
 
-test.describe('giỏ hàng, đăng ký và thanh toán', () => {
-  test('luồng đầy đủ: thêm giỏ, mã giảm giá, đăng ký, đặt hàng, xem bàn giao demo', async ({ page }) => {
-    // Thêm vào giỏ từ trang chi tiết
+test.describe('mua ngay, đăng ký và thanh toán', () => {
+  test('luồng đầy đủ: Mua ngay, đăng ký, mã giảm giá, đặt hàng, xem bàn giao demo', async ({ page }) => {
+    // Chọn acc ở trang chi tiết rồi bấm Mua ngay: chưa đăng nhập nên bị chuyển sang /login
     await page.goto('/accounts/acc-lien-quan-gia-re-rank-vang');
-    await page.getByRole('button', { name: 'Thêm vào giỏ hàng' }).click();
-    await expect(page.getByRole('status').getByText(/Đã thêm .* vào giỏ hàng/)).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Giỏ hàng, 1 tài khoản' })).toBeVisible();
-
-    // Không cho thêm trùng
-    await page.reload();
-    await expect(page.getByRole('button', { name: 'Đã có trong giỏ' })).toBeDisabled();
-
-    // Giỏ hàng: mã sai bị từ chối, mã đúng được áp dụng
-    await page.goto('/cart');
-    await expect(page.getByRole('heading', { name: 'Giỏ hàng', level: 1 })).toBeVisible();
-
-    await page.getByLabel('Mã giảm giá').fill('SAIMA');
-    await page.getByRole('button', { name: 'Áp dụng' }).click();
-    await expect(page.getByText('Mã giảm giá không hợp lệ')).toBeVisible();
-
-    await page.getByLabel('Mã giảm giá').fill('doro10');
-    await page.getByRole('button', { name: 'Áp dụng' }).click();
-    await expect(page.getByText('Giảm giá', { exact: true })).toBeVisible();
-    await expect(page.locator('.totals .grand dd')).toContainText('80.100'); // 89.000 - 10%
-
-    // Chưa đăng nhập: bị chuyển sang /login và nhớ trang đích
-    await page.getByRole('link', { name: 'Tiến hành thanh toán' }).click();
-    await expect(page).toHaveURL(/\/login\?returnUrl=%2Fcheckout/);
+    await expect(page.getByRole('link', { name: /giỏ hàng/i })).toHaveCount(0);
+    await page.locator('.buy-box').getByRole('link', { name: 'Mua ngay' }).click();
+    await expect(page).toHaveURL(/\/login\?returnUrl=%2Fcheckout%3Faccount%3Dacc-lien-quan-gia-re-rank-vang/);
 
     // Đăng ký tài khoản mới, xác thực form
     await page.getByRole('link', { name: 'Đăng ký ngay' }).click();
@@ -152,9 +131,19 @@ test.describe('giỏ hàng, đăng ký và thanh toán', () => {
     await page.getByLabel('Nhập lại mật khẩu').fill('matkhau1');
     await page.getByRole('button', { name: 'Đăng ký' }).click();
 
-    // Sau khi đăng ký quay lại đúng trang checkout, giỏ hàng vẫn còn
-    await expect(page).toHaveURL(/\/checkout$/);
+    // Sau khi đăng ký quay lại đúng trang checkout, acc đã chọn vẫn được chọn sẵn
+    await expect(page).toHaveURL(/\/checkout\?account=acc-lien-quan-gia-re-rank-vang$/);
     await expect(page.getByRole('heading', { name: 'Thanh toán', level: 1 })).toBeVisible();
+    await expect(page.locator('.summary .item')).toContainText('Acc Liên Quân giá rẻ - Rank Vàng, 30 tướng');
+
+    // Mã giảm giá áp dụng ngay tại checkout: mã sai bị từ chối, mã đúng được áp dụng
+    await page.getByLabel('Mã giảm giá').fill('SAIMA');
+    await page.getByRole('button', { name: 'Áp dụng' }).click();
+    await expect(page.getByText('Mã giảm giá không hợp lệ')).toBeVisible();
+    await page.getByLabel('Mã giảm giá').fill('doro10');
+    await page.getByRole('button', { name: 'Áp dụng' }).click();
+    await expect(page.getByText('Giảm giá (DORO10)')).toBeVisible();
+    await expect(page.locator('.totals .grand dd')).toContainText('80.100'); // 89.000 - 10%
 
     // Validate form nhận tài khoản
     await page.getByLabel('Email hoặc số điện thoại').fill('khong-hop-le');
@@ -189,12 +178,30 @@ test.describe('giỏ hàng, đăng ký và thanh toán', () => {
     await expect(page.getByText('Đã bán').first()).toBeVisible();
   });
 
-  test('giỏ trống có giao diện riêng và checkout đưa về giỏ hàng', async ({ page }) => {
-    await page.goto('/cart');
-    await expect(page.getByRole('heading', { name: 'Giỏ hàng của bạn đang trống' })).toBeVisible();
+  test('mua ngay từ thẻ ở danh sách đi thẳng tới checkout với đúng một tin', async ({ page }) => {
+    await login(page, 'demo@doroshop.vn', 'demo123');
+    await expect(page).toHaveURL('/');
+    await page.goto('/accounts?search=gia%20re');
+    const card = accountCards(page).filter({ hasText: 'Acc Liên Quân giá rẻ - Rank Vàng, 30 tướng' });
+    await card.getByRole('link', { name: /Mua ngay/ }).click();
 
+    await expect(page).toHaveURL(/\/checkout\?account=acc-lien-quan-gia-re-rank-vang$/);
+    await expect(page.locator('.summary .item')).toHaveCount(1);
+    await expect(page.locator('.totals .grand dd')).toContainText('89.000');
+  });
+
+  test('checkout không chọn acc thì báo chưa chọn, /cart không còn tồn tại', async ({ page }) => {
     await login(page, 'demo@doroshop.vn', 'demo123', '/checkout');
-    await expect(page).toHaveURL(/\/cart$/);
+    await expect(page.getByRole('heading', { name: 'Bạn chưa chọn tài khoản nào để mua' })).toBeVisible();
+
+    await page.goto('/cart');
+    await expect(page.getByRole('heading', { name: 'Không tìm thấy trang' })).toBeVisible();
+    await expect(page.getByRole('link', { name: /giỏ hàng/i })).toHaveCount(0);
+  });
+
+  test('checkout của tài khoản đã bán báo hết hàng', async ({ page }) => {
+    await login(page, 'demo@doroshop.vn', 'demo123', '/checkout?account=acc-lien-quan-rank-kim-cuong-60-tuong');
+    await expect(page.getByRole('heading', { name: 'Tài khoản này đã có người mua' })).toBeVisible();
   });
 
   test('sai mật khẩu báo lỗi rõ ràng, phiên đăng nhập giữ sau khi tải lại', async ({ page }) => {
@@ -357,7 +364,7 @@ test.describe('giao diện', () => {
 
   test('responsive: trên điện thoại không bị tràn ngang', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });
-    for (const url of ['/', '/accounts', '/accounts/acc-lien-quan-full-tuong-cao-thu', '/cart', '/login']) {
+    for (const url of ['/', '/accounts', '/accounts/acc-lien-quan-full-tuong-cao-thu', '/checkout', '/login']) {
       await page.goto(url);
       await expect(page.locator('main')).toBeVisible();
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);

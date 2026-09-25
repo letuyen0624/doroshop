@@ -23,11 +23,7 @@ export const routes: Routes = [
       import('./features/accounts/account-detail/account-detail').then((m) => m.AccountDetail),
   },
   {
-    path: 'cart',
-    title: 'Giỏ hàng',
-    loadComponent: () => import('./features/cart/cart-page/cart-page').then((m) => m.CartPage),
-  },
-  {
+    // Mua một tài khoản: /checkout?account=<slug>
     path: 'checkout',
     title: 'Thanh toán',
     canActivate: [authGuard],

@@ -4,6 +4,21 @@
     <p>Điền thông tin nhận tài khoản và chọn cách thanh toán. Đây là bản demo nên không có khoản tiền thật nào bị trừ.</p>
   </div>
 
+  @if (!item()) {
+    <div class="empty-state card">
+      <div class="empty-icon" aria-hidden="true">🎮</div>
+      <h2>Bạn chưa chọn tài khoản nào để mua</h2>
+      <p>Hãy chọn một acc ưng ý rồi bấm "Mua ngay" để thanh toán nhé.</p>
+      <a class="btn" routerLink="/accounts">Bắt đầu chọn acc</a>
+    </div>
+  } @else if (soldOut()) {
+    <div class="empty-state card">
+      <div class="empty-icon" aria-hidden="true">😢</div>
+      <h2>Tài khoản này đã có người mua</h2>
+      <p>"{{ item()!.title }}" không còn trong kho. Bạn xem thử các acc khác nhé.</p>
+      <a class="btn" routerLink="/accounts">Xem acc khác</a>
+    </div>
+  } @else {
   <form class="layout" [formGroup]="form" (ngSubmit)="submit()" novalidate>
     <div class="stack">
       <section class="card panel" aria-labelledby="contact-title">
@@ -95,21 +110,47 @@
     <aside class="card panel summary" aria-labelledby="co-summary-title">
       <h2 id="co-summary-title">Đơn hàng của bạn</h2>
 
-      <ul class="plain lines">
-        @for (line of cart.lines(); track line.account.id) {
-          <li>
-            <span class="line-name">{{ line.account.title }}</span>
-            <span>{{ line.lineTotal | vnd }}</span>
-          </li>
+      @if (item(); as acc) {
+        <div class="item">
+          <app-account-art class="item-art" [game]="acc.game" [height]="300" />
+          <div class="item-body">
+            <app-game-badge [game]="acc.game" [compact]="true" />
+            <a class="line-name" [routerLink]="['/accounts', acc.slug]">{{ acc.title }}</a>
+            <span class="item-meta">Rank {{ acc.rank }} · {{ acc.server }}</span>
+          </div>
+        </div>
+      }
+
+      <div class="coupon">
+        <label for="coupon-input">Mã giảm giá</label>
+        <div class="coupon-row">
+          <input
+            id="coupon-input"
+            class="input"
+            type="text"
+            placeholder="Ví dụ: DORO10"
+            autocomplete="off"
+            [formControl]="couponControl"
+            (keydown.enter)="applyCoupon($event)"
+          />
+          <button type="button" class="btn btn-soft" (click)="applyCoupon($event)">Áp dụng</button>
+        </div>
+        @if (coupon(); as applied) {
+          <p class="applied badge badge-success">
+            {{ applied.code }}: {{ applied.description }}
+            <button type="button" class="remove" aria-label="Gỡ mã giảm giá" (click)="removeCoupon()">Gỡ</button>
+          </p>
+        } @else {
+          <p class="hint">Thử {{ coupons[0].code }} hoặc {{ coupons[1].code }}.</p>
         }
-      </ul>
+      </div>
 
       <dl class="totals">
-        <div><dt>Tạm tính</dt><dd>{{ cart.subtotal() | vnd }}</dd></div>
-        @if (cart.discount() > 0) {
-          <div class="discount"><dt>Giảm giá ({{ cart.coupon()?.code }})</dt><dd>-{{ cart.discount() | vnd }}</dd></div>
+        <div><dt>Giá tài khoản</dt><dd>{{ totals().subtotal | vnd }}</dd></div>
+        @if (totals().discount > 0) {
+          <div class="discount"><dt>Giảm giá ({{ coupon()?.code }})</dt><dd>-{{ totals().discount | vnd }}</dd></div>
         }
-        <div class="grand"><dt>Tổng cộng</dt><dd>{{ cart.total() | vnd }}</dd></div>
+        <div class="grand"><dt>Tổng cộng</dt><dd>{{ totals().total | vnd }}</dd></div>
       </dl>
 
       @if (errorMessage(); as message) {
@@ -117,7 +158,10 @@
       }
 
       <button type="submit" class="btn btn-block" [disabled]="submitting()">{{ submitLabel() }}</button>
-      <a class="btn btn-ghost btn-block" routerLink="/cart">Quay lại giỏ hàng</a>
+      @if (item(); as acc) {
+        <a class="btn btn-ghost btn-block" [routerLink]="['/accounts', acc.slug]">Quay lại tin rao</a>
+      }
     </aside>
   </form>
+  }
 </div>

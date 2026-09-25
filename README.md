@@ -42,7 +42,13 @@ Mở http://localhost:4200.
 | Quản trị | `admin@doroshop.vn` | `admin123` |
 | Khách hàng | `demo@doroshop.vn` | `demo123` |
 
-Mã giảm giá: `DORO10` (giảm 10%), `SUKIEN50K` (giảm cố định 50.000 ₫, không vượt quá tạm tính).
+Mã giảm giá (nhập ngay ở trang thanh toán): `DORO10` (giảm 10%), `SUKIEN50K` (giảm cố định 50.000 ₫, không vượt quá giá tài khoản).
+
+## Luồng mua hàng
+
+Chọn acc → **Mua ngay** → đăng nhập nếu chưa có → thanh toán (`/checkout?account=<slug>`) → nhận thông tin bàn giao demo.
+
+Mỗi lần chỉ mua **một** tin rao, thanh toán ngay: mỗi acc cần bàn giao thông tin đăng nhập riêng sau khi thanh toán nên không gộp nhiều acc vào một đơn.
 
 Muốn chơi lại từ đầu: xóa dữ liệu site trong DevTools (Application > Local Storage) rồi tải lại trang.
 
@@ -51,13 +57,13 @@ Muốn chơi lại từ đầu: xóa dữ liệu site trong DevTools (Applicatio
 ```
 src/app/
   core/
-    models/      GameAccount, CartItem, User, Order, DeliveredCredential...
-    services/    Storage, GameAccount, Cart, Auth, Order, Toast, Theme
+    models/      GameAccount, User, Order, Coupon, DeliveredCredential...
+    services/    Storage, GameAccount, Auth, Order, Coupon (mã giảm giá), Toast, Theme
     guards/      authGuard, adminGuard
     data/        dữ liệu mẫu (27 tài khoản thuộc 5 game, 6 đơn hàng)
   shared/        component dùng chung (AccountCard, AccountArt, GameBadge...), pipe vnd, validators
   layout/        header, footer
-  features/      home, accounts, cart, checkout, auth, account, admin, not-found
+  features/      home, accounts, checkout, auth, account, admin, not-found
 e2e/             test Playwright
 ```
 
@@ -78,18 +84,18 @@ e2e/             test Playwright
   từng game nên chạy được khi offline, không dùng ảnh chụp màn hình thật.
 - **Đơn hàng mẫu**: 6 đơn của tài khoản demo được nạp lần đầu (khớp với 6 tin đã ở trạng thái "đã
   bán" trong dữ liệu mẫu) để trang admin và lịch sử đơn có dữ liệu xem ngay.
-- **Ràng buộc giỏ hàng**: mỗi tài khoản chỉ có một bản duy nhất, không thể mua trùng, không thể
-  mua tài khoản đã bán; `quantity` trong `CartItem` luôn là 1, giữ lại để đồng bộ logic giỏ hàng.
+- **Ràng buộc khi mua**: mỗi tài khoản chỉ có một bản duy nhất, không thể mua trùng và không thể mua tài khoản đã bán (kiểm tra cả ở trang checkout lẫn trong `OrderService.create`). Mỗi đơn (`Order`) chỉ chứa đúng một tài khoản (`order.account`), không có mảng nhiều dòng hàng.
 
 ## Quyết định thiết kế
 
 - Bộ lọc danh sách tài khoản lưu hoàn toàn trên query params (`search, games, ranks, minPrice,
   maxPrice, inStock, sort, page`) nên chia sẻ link được. Lọc theo game và rank cho phép chọn nhiều.
 - Tìm kiếm không phân biệt dấu tiếng Việt ("lien quan" ra "Liên Quân").
-- Đơn hàng lưu snapshot tiêu đề, game và giá tại thời điểm mua; tài khoản liên quan bị đổi sang
+- `OrderService.create` nhận `accountId` + mã giảm giá rồi tự lấy giá và tự tính lại tiền, client không quyết định số tiền. Đơn hàng lưu snapshot tiêu đề, game và giá tại thời điểm mua; tài khoản liên quan bị đổi sang
   `da_ban` ngay khi đặt hàng.
 - Guard `authGuard`/`adminGuard` chuyển về `/login?returnUrl=...` và quay lại đúng trang sau khi
-  đăng nhập (chỉ chấp nhận đường dẫn nội bộ).
+  đăng nhập (chỉ chấp nhận đường dẫn nội bộ): chưa đăng nhập mà bấm "Mua ngay" thì sau khi đăng nhập quay lại đúng `/checkout?account=...` với acc đã chọn.
+- Phiên bản dữ liệu `localStorage` là `v3`; khi khởi động app tự xóa dữ liệu của các bản cũ.
 - Giao diện sáng/tối mặc định theo hệ thống, nhớ lựa chọn; ở chế độ tối vẫn giữ tông hồng-tím nhưng
   đổi sang nền tối để không chói mắt; tôn trọng `prefers-reduced-motion`.
 - Mọi màu hồng/tím của trang xuất phát từ **hai biến gốc** ở đầu `src/styles.scss`, lấy từ logo: `--color-primary #F5A6C7` (hồng, tóc Doro) và `--color-secondary #AE91C7` (tím, trái tim). Các sắc đậm/nhạt (`--color-primary-strong #C2477A`, `--color-primary-ink #9B436C`, `--color-secondary-strong #8965A6`, `--color-secondary-ink #745190`, các sắc `-soft`/`-light`) được suy ra bằng cách đổi độ sáng trong OKLCH, giữ nguyên hue. Nút hành động chính dùng **đúng màu hồng gốc của Doro** `--btn-primary` (= `--color-primary #F5A6C7`, không gradient) với chữ tối `--on-primary #361926` (tương phản 8.43:1); `--color-primary-strong #C2477A` chỉ còn dùng cho icon, viền và điểm nhấn. Chữ hồng/tím cỡ nhỏ >= 5.1:1 (WCAG AA). Muốn đổi màu thương hiệu chỉ cần sửa các biến này.
@@ -111,8 +117,7 @@ Component chỉ làm việc với các service trả `Observable`, nên chỉ c�
 4. `OrderService.create`: để server kiểm tra trạng thái tài khoản, tính lại tiền, và **sinh thông
    tin bàn giao thật** (tài khoản game thật, đã đổi mật khẩu) qua một quy trình bàn giao an toàn -
    không bao giờ để client tự sinh `demoUsername`/`demoPassword` như hiện tại.
-5. `CartService` có thể giữ ở client (hoặc đồng bộ với server khi đã đăng nhập).
-6. Guard vẫn giữ để điều hướng, nhưng phân quyền thật phải nằm ở server.
+5. Guard vẫn giữ để điều hướng, nhưng phân quyền thật phải nằm ở server.
 
 ## Mở rộng tiếp
 

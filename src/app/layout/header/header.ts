@@ -4,9 +4,9 @@ import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/ro
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
 import { GAMES } from '../../core/models';
-import { AuthService, CartService, ThemeService, ToastService } from '../../core/services';
+import { AuthService, ThemeService, ToastService } from '../../core/services';
 
-/** Thanh điều hướng trên cùng: logo, tìm kiếm, giỏ hàng, tài khoản và nút đổi giao diện. */
+/** Thanh điều hướng trên cùng: logo, tìm kiếm, tài khoản và nút đổi giao diện. */
 @Component({
   selector: 'app-header',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,7 +17,6 @@ import { AuthService, CartService, ThemeService, ToastService } from '../../core
 export class Header {
   private readonly router = inject(Router);
   private readonly auth = inject(AuthService);
-  private readonly cart = inject(CartService);
   private readonly theme = inject(ThemeService);
   private readonly toast = inject(ToastService);
 
@@ -26,16 +25,10 @@ export class Header {
 
   protected readonly currentUser = this.auth.currentUser;
   protected readonly isAdmin = this.auth.isAdmin;
-  protected readonly itemCount = this.cart.itemCount;
   protected readonly resolvedTheme = this.theme.resolved;
 
   protected readonly menuOpen = signal(false);
   protected readonly userMenuOpen = signal(false);
-
-  protected readonly cartLabel = computed(() => {
-    const count = this.itemCount();
-    return count > 0 ? `Giỏ hàng, ${count} tài khoản` : 'Giỏ hàng đang trống';
-  });
 
   protected readonly themeLabel = computed(() =>
     this.resolvedTheme() === 'dark' ? 'Chuyển sang giao diện sáng' : 'Chuyển sang giao diện tối',

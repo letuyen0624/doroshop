@@ -42,7 +42,6 @@ import { GAMES } from '../../core/models';
           <h3 id="footer-support">Hỗ trợ</h3>
           <ul class="plain">
             <li><a routerLink="/accounts">Tất cả tài khoản</a></li>
-            <li><a routerLink="/cart">Giỏ hàng</a></li>
             <li><a routerLink="/account/orders">Tra cứu đơn hàng</a></li>
             <li><a routerLink="/login">Đăng nhập</a></li>
           </ul>

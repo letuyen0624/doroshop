@@ -1,5 +1,5 @@
 import { ACCOUNTS_SEED } from './accounts.seed';
-import { DeliveredCredential, Order, OrderLine, OrderStatus, PaymentMethod } from '../models';
+import { DeliveredCredential, Order, OrderedAccount, OrderStatus, PaymentMethod } from '../models';
 import { gameName } from '../models';
 
 interface SeedSpec {
@@ -55,7 +55,7 @@ export function buildOrdersSeed(now: Date = new Date()): OrdersSeedResult {
 
   SPECS.forEach((spec, index) => {
     const account = findAccount(spec.accountId);
-    const line: OrderLine = {
+    const line: OrderedAccount = {
       accountId: account.id,
       title: account.title,
       slug: account.slug,
@@ -71,7 +71,7 @@ export function buildOrdersSeed(now: Date = new Date()): OrdersSeedResult {
     orders.push({
       id,
       userId: 'u-demo',
-      lines: [line],
+      account: line,
       contact: {
         fullName: 'Khách hàng Demo',
         contact: 'demo@doroshop.vn',

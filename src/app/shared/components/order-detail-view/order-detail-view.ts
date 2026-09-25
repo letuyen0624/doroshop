@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DeliveredCredential, Order, PAYMENT_METHOD_LABELS } from '../../../core/models';
 import { VndPipe } from '../../pipes';
@@ -53,13 +53,11 @@ import { OrderStatusBadge } from '../order-status/order-status';
             </tr>
           </thead>
           <tbody>
-            @for (line of o.lines; track line.accountId) {
-              <tr>
-                <td><a [routerLink]="['/accounts', line.slug]">{{ line.title }}</a></td>
-                <td>{{ line.game }}</td>
-                <td class="num">{{ line.price | vnd }}</td>
-              </tr>
-            }
+            <tr>
+              <td><a [routerLink]="['/accounts', o.account.slug]">{{ o.account.title }}</a></td>
+              <td>{{ o.account.game }}</td>
+              <td class="num">{{ o.account.price | vnd }}</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -73,7 +71,7 @@ import { OrderStatusBadge } from '../order-status/order-status';
           <ul class="plain credential-list">
             @for (credential of credentials(); track credential.accountId) {
               <li class="credential card">
-                <span class="credential-title">{{ titleFor(credential.accountId) }}</span>
+                <span class="credential-title">{{ o.account.title }}</span>
                 <dl>
                   <div>
                     <dt>Tài khoản demo</dt>
@@ -110,16 +108,4 @@ export class OrderDetailView {
   readonly credentials = input<DeliveredCredential[]>([]);
 
   protected readonly paymentLabels = PAYMENT_METHOD_LABELS;
-
-  private readonly titleMap = computed(() => {
-    const map = new Map<string, string>();
-    for (const line of this.order().lines) {
-      map.set(line.accountId, line.title);
-    }
-    return map;
-  });
-
-  protected titleFor(accountId: string): string {
-    return this.titleMap().get(accountId) ?? accountId;
-  }
 }

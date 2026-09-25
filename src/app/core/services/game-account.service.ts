@@ -39,7 +39,7 @@ export class GameAccountService {
   private readonly storage = inject(StorageService);
   private readonly accounts = signal<GameAccount[]>(this.load());
 
-  /** Snapshot đồng bộ, dùng cho giỏ hàng và thống kê admin. */
+  /** Snapshot đồng bộ, dùng cho trang thanh toán và thống kê admin. */
   readonly all = this.accounts.asReadonly();
 
   /** Số tin đang còn hàng, tính động từ dữ liệu thật. */

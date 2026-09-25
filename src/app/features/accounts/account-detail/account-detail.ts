@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { catchError, map, of, startWith, switchMap } from 'rxjs';
 import { GameAccount, LOGIN_STATUS_LABELS, gameName } from '../../../core/models';
-import { CartService, GameAccountService, ToastService, discountPercent } from '../../../core/services';
+import { GameAccountService, discountPercent } from '../../../core/services';
 import { AccountArt, AccountCard, GameBadge, StarRating } from '../../../shared/components';
 import { VndPipe } from '../../../shared/pipes';
 
@@ -26,8 +26,6 @@ const LOADING: DetailState = { status: 'loading' };
 })
 export class AccountDetail {
   private readonly accountService = inject(GameAccountService);
-  private readonly cart = inject(CartService);
-  private readonly toast = inject(ToastService);
 
   /** Lấy từ tham số đường dẫn /accounts/:slug. */
   readonly slug = input.required<string>();
@@ -87,22 +85,4 @@ export class AccountDetail {
     }
     return Object.entries(account.extraInfo).map(([key, value]) => ({ key, value }));
   });
-
-  protected readonly alreadyInCart = computed(() => {
-    const account = this.account();
-    return account ? this.cart.lines().some((line) => line.account.id === account.id) : false;
-  });
-
-  protected addToCart(): void {
-    const account = this.account();
-    if (!account) {
-      return;
-    }
-    const added = this.cart.add(account);
-    if (added) {
-      this.toast.success(`Đã thêm "${account.title}" vào giỏ hàng`);
-    } else {
-      this.toast.info('Tài khoản này đã có trong giỏ hoặc đã được bán');
-    }
-  }
 }

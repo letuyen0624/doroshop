@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { GameAccount } from '../../../core/models';
-import { CartService, ToastService, discountPercent } from '../../../core/services';
+import { discountPercent } from '../../../core/services';
 import { VndPipe } from '../../pipes';
 import { AccountArt } from '../account-art/account-art';
 import { GameBadge } from '../game-badge/game-badge';
@@ -42,14 +42,18 @@ import { StarRating } from '../star-rating/star-rating';
           }
         </div>
 
-        <button
-          type="button"
-          class="btn btn-block"
-          [disabled]="account().status === 'da_ban'"
-          (click)="addToCart()"
-        >
-          {{ account().status === 'da_ban' ? 'Đã bán' : 'Thêm vào giỏ' }}
-        </button>
+        @if (account().status === 'da_ban') {
+          <button type="button" class="btn btn-block" disabled>Đã bán</button>
+        } @else {
+          <a
+            class="btn btn-block"
+            routerLink="/checkout"
+            [queryParams]="{ account: account().slug }"
+            [attr.aria-label]="'Mua ngay ' + account().title"
+          >
+            Mua ngay
+          </a>
+        }
       </div>
     </article>
   `,
@@ -57,18 +61,5 @@ import { StarRating } from '../star-rating/star-rating';
 export class AccountCard {
   readonly account = input.required<GameAccount>();
 
-  private readonly cart = inject(CartService);
-  private readonly toast = inject(ToastService);
-
   protected readonly discount = computed(() => discountPercent(this.account()));
-
-  protected addToCart(): void {
-    const account = this.account();
-    const added = this.cart.add(account);
-    if (added) {
-      this.toast.success(`Đã thêm "${account.title}" vào giỏ hàng`);
-    } else {
-      this.toast.info('Tài khoản này đã có trong giỏ hoặc đã được bán');
-    }
-  }
 }

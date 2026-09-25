@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 
-/** Tiền tố và phiên bản dữ liệu, đổi version sẽ bỏ qua dữ liệu cũ không tương thích. */
+/** Tiền tố và phiên bản dữ liệu, đổi version sẽ bỏ qua (và dọn) dữ liệu cũ không tương thích. */
 const PREFIX = 'doroshop';
-const VERSION = 'v2';
+const VERSION = 'v3';
 
 /**
  * Bọc localStorage để toàn bộ ứng dụng đọc ghi qua một chỗ duy nhất.
@@ -13,6 +13,10 @@ const VERSION = 'v2';
 export class StorageService {
   private readonly memoryFallback = new Map<string, string>();
   private readonly available = this.detectAvailability();
+
+  constructor() {
+    this.purgeLegacyData();
+  }
 
   /** Đọc một giá trị đã lưu, trả về null nếu không có hoặc dữ liệu hỏng. */
   read<T>(key: string): T | null {
@@ -86,6 +90,29 @@ export class StorageService {
     }
   }
 
+  /**
+   * Dọn dữ liệu của các phiên bản cũ (giỏ hàng, mã giảm giá, đơn hàng nhiều dòng...) để không
+   * bỏ rác trong localStorage. Chỉ giữ khóa của VERSION hiện tại.
+   */
+  private purgeLegacyData(): void {
+    if (!this.available) {
+      return;
+    }
+    try {
+      const current = `${PREFIX}.${VERSION}.`;
+      const legacy: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key?.startsWith(`${PREFIX}.`) && !key.startsWith(current)) {
+          legacy.push(key);
+        }
+      }
+      legacy.forEach((key) => localStorage.removeItem(key));
+    } catch {
+      /* Bỏ qua. */
+    }
+  }
+
   private fullKey(key: string): string {
     return `${PREFIX}.${VERSION}.${key}`;
   }
@@ -117,8 +144,6 @@ export const STORAGE_KEYS = {
   accounts: 'accounts',
   users: 'users',
   session: 'session',
-  cart: 'cart',
-  coupon: 'coupon',
   orders: 'orders',
   orderSeq: 'order-seq',
   credentials: 'credentials',

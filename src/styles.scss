@@ -295,6 +295,11 @@ ul.plain {
   cursor: not-allowed;
 }
 
+/* Nút dạng liên kết: không để a:hover đổi màu chữ (biến thể ghost/soft tự khai báo màu hover riêng) */
+a.btn:not(.btn-danger):hover {
+  color: var(--on-primary);
+}
+
 .btn-ghost {
   background: transparent;
   color: var(--text);

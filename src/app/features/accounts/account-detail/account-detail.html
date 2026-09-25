@@ -90,21 +90,11 @@
         <p class="description">{{ item.description }}</p>
 
         <div class="buy-box">
-          <button
-            type="button"
-            class="btn add-btn"
-            [disabled]="item.status === 'da_ban' || alreadyInCart()"
-            (click)="addToCart()"
-          >
-            @if (item.status === 'da_ban') {
-              Đã bán
-            } @else if (alreadyInCart()) {
-              Đã có trong giỏ
-            } @else {
-              Thêm vào giỏ hàng
-            }
-          </button>
-          <a class="btn btn-ghost" routerLink="/cart">Xem giỏ hàng</a>
+          @if (item.status === 'da_ban') {
+            <button type="button" class="btn add-btn" disabled>Đã bán</button>
+          } @else {
+            <a class="btn add-btn" routerLink="/checkout" [queryParams]="{ account: item.slug }">Mua ngay</a>
+          }
         </div>
 
         <ul class="plain assurances">

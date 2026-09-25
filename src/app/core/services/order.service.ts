@@ -1,7 +1,8 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Observable, delay, of, throwError } from 'rxjs';
 import { ORDERS_SEED_COUNT, buildOrdersSeed } from '../data/orders.seed';
-import { CreateOrderPayload, DeliveredCredential, Order, OrderStatus } from '../models';
+import { CreateOrderPayload, DeliveredCredential, Order, OrderStatus, gameName } from '../models';
+import { calculateTotals, findCoupon } from './coupon';
 import { GameAccountService } from './game-account.service';
 import { STORAGE_KEYS, StorageService } from './storage.service';
 
@@ -50,27 +51,49 @@ export class OrderService {
       .reduce((total, order) => total + order.total, 0),
   );
 
+  /**
+   * Tạo đơn cho đúng MỘT tài khoản. Giống một backend thật, service tự kiểm tra tin rao
+   * còn hàng, tự lấy tiêu đề/giá và tự tính lại tiền theo mã giảm giá (nếu hợp lệ).
+   */
   create(payload: CreateOrderPayload): Observable<Order> {
-    if (payload.lines.length === 0) {
-      return throwError(() => new Error('Đơn hàng phải có ít nhất một tài khoản')).pipe(
+    const account = this.accountService.getById(payload.accountId);
+    if (!account) {
+      return throwError(() => new Error('Không tìm thấy tài khoản cần mua')).pipe(delay(LATENCY));
+    }
+    if (account.status === 'da_ban') {
+      return throwError(() => new Error('Tài khoản này vừa được bán cho người khác')).pipe(
         delay(LATENCY),
       );
     }
 
+    const coupon = findCoupon(payload.couponCode) ?? null;
+    const { subtotal, discount, total } = calculateTotals(account.price, coupon);
+
     const sequence = (this.storage.read<number>(STORAGE_KEYS.orderSeq) ?? 0) + 1;
     const order: Order = {
-      ...payload,
       id: formatOrderId(sequence),
+      userId: payload.userId,
+      account: {
+        accountId: account.id,
+        title: account.title,
+        slug: account.slug,
+        game: gameName(account.game),
+        price: account.price,
+      },
+      contact: payload.contact,
+      paymentMethod: payload.paymentMethod,
+      subtotal,
+      discount,
+      total,
+      couponCode: coupon?.code ?? null,
       status: 'pending',
       createdAt: new Date().toISOString(),
     };
 
     this.storage.write(STORAGE_KEYS.orderSeq, sequence);
     this.commitOrders([order, ...this.ordersSignal()]);
-    this.accountService.markSold(order.lines.map((line) => line.accountId));
-
-    const newCredentials = order.lines.map((line) => buildDemoCredential(order.id, line.accountId));
-    this.commitCredentials([...this.credentialsSignal(), ...newCredentials]);
+    this.accountService.markSold([account.id]);
+    this.commitCredentials([...this.credentialsSignal(), buildDemoCredential(order.id, account.id)]);
 
     return fake(order);
   }

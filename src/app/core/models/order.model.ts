@@ -2,7 +2,8 @@ export type PaymentMethod = 'cod' | 'bank' | 'wallet';
 
 export type OrderStatus = 'pending' | 'confirmed' | 'delivered' | 'cancelled';
 
-export interface OrderLine {
+/** Snapshot của tài khoản được mua, lưu lại để lịch sử đơn không đổi khi admin sửa tin. */
+export interface OrderedAccount {
   accountId: string;
   /** Tiêu đề tài khoản tại thời điểm đặt hàng. */
   title: string;
@@ -23,7 +24,8 @@ export interface Order {
   /** Mã đơn dạng DR-000123. */
   id: string;
   userId: string;
-  lines: OrderLine[];
+  /** Mỗi đơn chỉ có đúng một tài khoản. */
+  account: OrderedAccount;
   contact: ContactInfo;
   paymentMethod: PaymentMethod;
   subtotal: number;
@@ -34,7 +36,17 @@ export interface Order {
   createdAt: string;
 }
 
-export type CreateOrderPayload = Omit<Order, 'id' | 'status' | 'createdAt'>;
+/**
+ * Dữ liệu client gửi lên khi mua một tài khoản. Tiêu đề, giá và số tiền đều do
+ * OrderService tự lấy lại từ tin rao và tính lại, client không tự quyết định.
+ */
+export interface CreateOrderPayload {
+  userId: string;
+  accountId: string;
+  contact: ContactInfo;
+  paymentMethod: PaymentMethod;
+  couponCode: string | null;
+}
 
 /** Thông tin bàn giao tài khoản mô phỏng, sinh ra sau khi đặt hàng thành công. */
 export interface DeliveredCredential {

@@ -123,23 +123,104 @@
 
 /* ---------- Tóm tắt ---------- */
 
-.lines {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  padding-bottom: var(--space-3);
-  border-bottom: 1px solid var(--border);
-  font-size: 0.92rem;
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-3);
 }
 
-.lines li {
-  display: flex;
-  justify-content: space-between;
+/* Tài khoản đang mua */
+.item {
+  display: grid;
+  grid-template-columns: 96px 1fr;
   gap: var(--space-3);
+  align-items: center;
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.item-art {
+  display: block;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.item-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
 }
 
 .line-name {
   min-width: 0;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.line-name:hover {
+  color: var(--accent-strong);
+}
+
+.item-meta {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Mã giảm giá */
+.coupon {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.coupon label {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.coupon-row {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.coupon-row .btn {
+  flex: none;
+}
+
+.coupon p {
+  margin: 0;
+}
+
+.hint {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.applied {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-2);
+  white-space: normal;
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+}
+
+.remove {
+  border: none;
+  background: transparent;
+  color: var(--danger);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.remove:hover {
+  text-decoration: underline;
 }
 
 .totals {
