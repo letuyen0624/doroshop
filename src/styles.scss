@@ -41,11 +41,11 @@
   --accent-2-strong: var(--color-secondary-ink);
   --accent-2-soft: var(--color-secondary-soft);
 
-  /* Nút hành động chính: MỘT màu hồng đặc (không dùng gradient).
-     Nền = --color-primary-strong (hue 335° như hồng gốc), chữ trắng đạt 4.69:1.
-     Hover chỉ làm đậm nhẹ bằng filter. */
-  --btn-primary: var(--color-primary-strong);
-  --on-primary: #ffffff;
+  /* Nút hành động chính: nền là ĐÚNG hồng pastel gốc của Doro (#f5a6c7), chữ tối #361926
+     (cùng màu --text) thay vì làm tối nền cho hợp chữ trắng. Tương phản 8.43:1 (7.13:1 khi hover).
+     Hover chỉ làm đậm nhẹ bằng filter, không gradient. Dùng chung cho cả hai theme. */
+  --btn-primary: var(--color-primary);
+  --on-primary: #361926;
   --btn-hover-filter: brightness(0.92);
 
   /* Nền, viền và chữ: cùng hue hồng, độ sáng thay đổi, chroma rất thấp */
@@ -110,9 +110,6 @@
   --color-secondary-strong: var(--color-secondary);
   --color-secondary-ink: #e1cff1;
   --color-secondary-soft: #392747;
-
-  --on-primary: #260b18; /* chữ đậm trên nền hồng pastel gốc: 9.8:1 */
-  --btn-hover-filter: brightness(1.08);
 
   --bg: #1e0e15;
   --surface: #2b171f;
