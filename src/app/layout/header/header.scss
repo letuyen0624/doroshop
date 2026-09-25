@@ -97,8 +97,8 @@
   height: 36px;
   border: none;
   border-radius: var(--radius-sm);
-  background: var(--gradient-primary);
-  color: var(--on-gradient);
+  background: var(--btn-primary);
+  color: var(--on-primary);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -107,7 +107,7 @@
 }
 
 .search-btn:hover {
-  filter: var(--gradient-hover-filter);
+  filter: var(--btn-hover-filter);
 }
 
 /* ---------- Nhóm nút bên phải ---------- */
@@ -119,7 +119,7 @@
   flex: none;
 }
 
-/* Nút nhỏ nên chữ trắng che gần hết chiều ngang; thêm padding ngang để cả hai tông hồng-tím của gradient lộ rõ. */
+/* Nút Đăng nhập rộng hơn nút mặc định một chút cho cân với thanh header. */
 .login-btn {
   padding-inline: 1.5rem;
 }
@@ -180,8 +180,8 @@
   width: 32px;
   height: 32px;
   border-radius: var(--radius-pill);
-  background: var(--gradient-primary);
-  color: var(--on-gradient);
+  background: var(--btn-primary);
+  color: var(--on-primary);
   display: inline-flex;
   align-items: center;
   justify-content: center;

@@ -92,7 +92,7 @@ e2e/             test Playwright
   đăng nhập (chỉ chấp nhận đường dẫn nội bộ).
 - Giao diện sáng/tối mặc định theo hệ thống, nhớ lựa chọn; ở chế độ tối vẫn giữ tông hồng-tím nhưng
   đổi sang nền tối để không chói mắt; tôn trọng `prefers-reduced-motion`.
-- Mọi màu hồng/tím của trang xuất phát từ **hai biến gốc** ở đầu `src/styles.scss`, lấy từ logo: `--color-primary #F5A6C7` (hồng, tóc Doro) và `--color-secondary #AE91C7` (tím, trái tim). Các sắc đậm/nhạt (`--color-primary-strong #B25781`, `--color-primary-ink #9B436C`, `--color-secondary-strong #8965A6`, `--color-secondary-ink #745190`, các sắc `-soft`/`-light`) được suy ra bằng cách đổi độ sáng trong OKLCH, giữ nguyên hue. Chữ trắng trên gradient nút đạt tối thiểu 4.59:1, chữ hồng/tím cỡ nhỏ >= 5.1:1 (WCAG AA). Muốn đổi màu thương hiệu chỉ cần sửa các biến này.
+- Mọi màu hồng/tím của trang xuất phát từ **hai biến gốc** ở đầu `src/styles.scss`, lấy từ logo: `--color-primary #F5A6C7` (hồng, tóc Doro) và `--color-secondary #AE91C7` (tím, trái tim). Các sắc đậm/nhạt (`--color-primary-strong #C2477A`, `--color-primary-ink #9B436C`, `--color-secondary-strong #8965A6`, `--color-secondary-ink #745190`, các sắc `-soft`/`-light`) được suy ra bằng cách đổi độ sáng trong OKLCH, giữ nguyên hue. Nút hành động chính dùng **một màu hồng đặc** `--btn-primary` (= `--color-primary-strong`, hue 335° như hồng gốc, không gradient), chữ trắng đạt 4.69:1, chữ hồng/tím cỡ nhỏ >= 5.1:1 (WCAG AA). Muốn đổi màu thương hiệu chỉ cần sửa các biến này.
 - Form thêm/sửa tin rao dùng `FormArray` để thêm/xóa từng dòng `extraInfo` (thông tin tự do) trực
   tiếp trên giao diện, không phải nhập dạng văn bản thô.
 

@@ -91,7 +91,7 @@
 
 .bar {
   width: 100%;
-  background: linear-gradient(180deg, var(--gradient-to), var(--gradient-from));
+  background: var(--color-primary-strong);
   border-radius: var(--radius-sm) var(--radius-sm) 0 0;
   transition: height 400ms ease;
 }
@@ -130,7 +130,7 @@
 
 .game-bar {
   height: 100%;
-  background: linear-gradient(90deg, var(--gradient-from), var(--gradient-to));
+  background: var(--color-primary-strong);
   border-radius: var(--radius-pill);
   transition: width 400ms ease;
 }

@@ -30,9 +30,9 @@
 }
 
 .page-btn.active {
-  background: var(--gradient-primary);
+  background: var(--btn-primary);
   border-color: transparent;
-  color: var(--on-gradient);
+  color: var(--on-primary);
 }
 
 .page-btn:disabled {
