@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { forkJoin } from 'rxjs';
 import { GAMES, Game, GameAccount } from '../../core/models';
 import { GameAccountService } from '../../core/services';
 import { AccountCard, GameBadge } from '../../shared/components';
@@ -12,7 +11,7 @@ interface GameSection {
   accounts: GameAccount[];
 }
 
-/** Trang chủ: banner, khối tin nổi bật theo từng game, tin giảm giá và lý do chọn DoroShop. */
+/** Trang chủ: banner, khối tin nổi bật theo từng game và lý do chọn DoroShop. */
 @Component({
   selector: 'app-home',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,8 +27,6 @@ export class Home {
   protected readonly availableCount = this.accountService.availableCount;
 
   protected readonly gameSections = signal<GameSection[]>([]);
-  protected readonly featured = signal<GameAccount[]>([]);
-  protected readonly onSale = signal<GameAccount[]>([]);
   protected readonly loading = signal(true);
   protected readonly error = signal<string | null>(null);
 
@@ -48,16 +45,11 @@ export class Home {
 
     const gameById = new Map(GAMES.map((game) => [game.id, game]));
 
-    forkJoin({
-      featured: this.accountService.featured(4),
-      onSale: this.accountService.onSale(4),
-      byGame: this.accountService.featuredByGame(4),
-    })
+    this.accountService
+      .featuredByGame(4)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: ({ featured, onSale, byGame }) => {
-          this.featured.set(featured);
-          this.onSale.set(onSale);
+        next: (byGame) => {
           this.gameSections.set(
             byGame
               .filter((section) => section.accounts.length > 0)

@@ -70,7 +70,14 @@
     </div>
   </section>
 
-  @if (loading()) {
+  @if (error(); as message) {
+    <section class="container section">
+      <div class="error-state row">
+        <span>{{ message }}</span>
+        <button type="button" class="btn btn-sm btn-ghost" (click)="load()">Thử lại</button>
+      </div>
+    </section>
+  } @else if (loading()) {
     @for (item of skeletonSections; track $index) {
       <section class="container section" aria-hidden="true">
         <div class="section-head">
@@ -107,70 +114,6 @@
         </div>
       </section>
     }
-  }
-
-  @if (error(); as message) {
-    <section class="container section">
-      <div class="error-state row">
-        <span>{{ message }}</span>
-        <button type="button" class="btn btn-sm btn-ghost" (click)="load()">Thử lại</button>
-      </div>
-    </section>
-  } @else {
-    <section class="container section" aria-labelledby="featured-title">
-      <div class="section-head">
-        <h2 id="featured-title">Tin nổi bật</h2>
-        <a [routerLink]="['/accounts']" [queryParams]="{ sort: 'rating' }">Xem thêm →</a>
-      </div>
-
-      @if (loading()) {
-        <div class="account-grid">
-          @for (item of skeletons; track $index) {
-            <div class="card skeleton-card" aria-hidden="true">
-              <div class="skeleton skeleton-thumb"></div>
-              <div class="skeleton skeleton-line"></div>
-              <div class="skeleton skeleton-line short"></div>
-            </div>
-          }
-        </div>
-        <p class="sr-only" role="status">Đang tải tin nổi bật</p>
-      } @else {
-        <div class="account-grid">
-          @for (account of featured(); track account.id) {
-            <app-account-card [account]="account" />
-          } @empty {
-            <p class="empty-state">Chưa có tin nào để hiển thị.</p>
-          }
-        </div>
-      }
-    </section>
-
-    <section class="container section" aria-labelledby="sale-title">
-      <div class="section-head">
-        <h2 id="sale-title">Đang giảm giá</h2>
-        <a [routerLink]="['/accounts']" [queryParams]="{ sort: 'price-asc' }">Xem thêm →</a>
-      </div>
-
-      @if (loading()) {
-        <div class="account-grid">
-          @for (item of skeletons; track $index) {
-            <div class="card skeleton-card" aria-hidden="true">
-              <div class="skeleton skeleton-thumb"></div>
-              <div class="skeleton skeleton-line"></div>
-              <div class="skeleton skeleton-line short"></div>
-            </div>
-          }
-        </div>
-      } @else {
-        <div class="account-grid">
-          @for (account of onSale(); track account.id) {
-            <app-account-card [account]="account" />
-          } @empty {
-            <p class="empty-state">Hiện chưa có chương trình giảm giá nào.</p>
-          }
-        </div>
-      }
-    </section>
   }
 
   <section class="container section" aria-labelledby="why-title">

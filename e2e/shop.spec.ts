@@ -10,7 +10,7 @@ const login = async (page: Page, email: string, password: string, returnTo = '/'
 const accountCards = (page: Page) => page.locator('app-account-card');
 
 test.describe('duyệt và lọc tài khoản', () => {
-  test('trang chủ hiện banner, khối tin theo từng game và tin nổi bật/giảm giá', async ({ page }) => {
+  test('trang chủ hiện banner và khối tin theo từng game', async ({ page }) => {
     await page.goto('/');
     await expect(page).toHaveTitle('DoroShop – Shop acc uy tín');
     await expect(page.getByRole('heading', { level: 1 })).toContainText('Tìm acc không khó, đã có Doro');
@@ -23,10 +23,13 @@ test.describe('duyệt và lọc tài khoản', () => {
     );
     // "Khác" chưa có tin rao nào nên không hiện khối rỗng.
     await expect(page.getByRole('heading', { name: 'Khác', exact: true })).toHaveCount(0);
+    // Không còn section "Tin nổi bật" / "Đang giảm giá".
+    await expect(page.getByRole('heading', { name: 'Tin nổi bật' })).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Đang giảm giá' })).toHaveCount(0);
 
     await expect(accountCards(page).first()).toBeVisible();
-    // 5 game (tối đa 4 tin/game) + 4 tin nổi bật + 4 tin giảm giá
-    await expect(accountCards(page)).toHaveCount(28);
+    // 5 game, tối đa 4 tin mỗi game
+    await expect(accountCards(page)).toHaveCount(20);
   });
 
   test('trang chủ không còn thanh danh mục game phụ dưới header', async ({ page }) => {

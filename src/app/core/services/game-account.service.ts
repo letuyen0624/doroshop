@@ -84,24 +84,6 @@ export class GameAccountService {
     return this.accounts().find((account) => account.id === id);
   }
 
-  /** Tin nổi bật: đánh giá cao nhất và còn hàng. */
-  featured(limit = 8): Observable<GameAccount[]> {
-    const items = this.accounts()
-      .filter((account) => account.status === 'con_hang')
-      .sort((a, b) => b.rating - a.rating || b.reviewCount - a.reviewCount)
-      .slice(0, limit);
-    return fake(items);
-  }
-
-  /** Tin đang giảm giá, xếp theo mức giảm lớn nhất. */
-  onSale(limit = 8): Observable<GameAccount[]> {
-    const items = this.accounts()
-      .filter((account) => account.oldPrice !== undefined && account.oldPrice > account.price)
-      .sort((a, b) => discountPercent(b) - discountPercent(a))
-      .slice(0, limit);
-    return fake(items);
-  }
-
   /**
    * Tin nổi bật của từng game, dùng cho các khối "theo game" ở trang chủ. Chỉ trả về
    * những game đang thực sự có tin còn hàng (không trả khối rỗng), theo đúng thứ tự
