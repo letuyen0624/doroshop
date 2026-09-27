@@ -92,40 +92,6 @@
       } @else {
         <a class="btn btn-sm login-btn" routerLink="/login">Đăng nhập</a>
       }
-
-      <button
-        type="button"
-        class="icon-btn menu-toggle"
-        [attr.aria-expanded]="menuOpen()"
-        aria-controls="main-nav"
-        aria-label="Mở menu danh mục game"
-        (click)="toggleMenu()"
-      >
-        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-          <g stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <line x1="4" y1="7" x2="20" y2="7" />
-            <line x1="4" y1="12" x2="20" y2="12" />
-            <line x1="4" y1="17" x2="20" y2="17" />
-          </g>
-        </svg>
-      </button>
     </div>
   </div>
-
-  <nav id="main-nav" class="main-nav" [class.open]="menuOpen()" aria-label="Danh mục game">
-    <div class="container nav-inner">
-      <a routerLink="/accounts" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-        Tất cả acc
-      </a>
-      @for (game of games; track game.id) {
-        <a
-          [routerLink]="['/accounts']"
-          [queryParams]="{ games: game.id }"
-          routerLinkActive="active"
-        >
-          {{ game.name }}
-        </a>
-      }
-    </div>
-  </nav>
 </header>

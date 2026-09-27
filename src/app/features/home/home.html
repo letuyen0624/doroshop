@@ -70,29 +70,44 @@
     </div>
   </section>
 
-  <section class="container section" aria-labelledby="games-title">
-    <div class="section-head">
-      <h2 id="games-title">Chọn theo tựa game</h2>
-      <a routerLink="/accounts">Xem tất cả →</a>
-    </div>
+  @if (loading()) {
+    @for (item of skeletonSections; track $index) {
+      <section class="container section" aria-hidden="true">
+        <div class="section-head">
+          <div class="skeleton skeleton-line game-title-skeleton"></div>
+        </div>
+        <div class="account-grid">
+          @for (slot of skeletons; track $index) {
+            <div class="card skeleton-card">
+              <div class="skeleton skeleton-thumb"></div>
+              <div class="skeleton skeleton-line"></div>
+              <div class="skeleton skeleton-line short"></div>
+            </div>
+          }
+        </div>
+      </section>
+    }
+  } @else {
+    @for (section of gameSections(); track section.game.id) {
+      <section class="container section" [attr.aria-labelledby]="'game-' + section.game.id + '-title'">
+        <div class="section-head">
+          <h2 [id]="'game-' + section.game.id + '-title'" class="game-section-title">
+            <app-game-badge [game]="section.game.id" [compact]="true" aria-hidden="true" />
+            {{ section.game.name }}
+          </h2>
+          <a [routerLink]="['/accounts']" [queryParams]="{ games: section.game.id }">
+            Xem tất cả acc {{ section.game.name }} →
+          </a>
+        </div>
 
-    <ul class="plain game-grid">
-      @for (game of games; track game.id) {
-        @if (game.id !== 'khac') {
-          <li>
-            <a class="game-card card" [routerLink]="['/accounts']" [queryParams]="{ games: game.id }">
-              <app-account-art [game]="game.id" [height]="110" />
-              <div class="game-body">
-                <app-game-badge [game]="game.id" [compact]="true" />
-                <h3>{{ game.name }}</h3>
-                <p>{{ game.description }}</p>
-              </div>
-            </a>
-          </li>
-        }
-      }
-    </ul>
-  </section>
+        <div class="account-grid">
+          @for (account of section.accounts; track account.id) {
+            <app-account-card [account]="account" />
+          }
+        </div>
+      </section>
+    }
+  }
 
   @if (error(); as message) {
     <section class="container section">

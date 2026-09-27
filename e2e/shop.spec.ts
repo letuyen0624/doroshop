@@ -10,14 +10,33 @@ const login = async (page: Page, email: string, password: string, returnTo = '/'
 const accountCards = (page: Page) => page.locator('app-account-card');
 
 test.describe('duyệt và lọc tài khoản', () => {
-  test('trang chủ hiện banner, danh mục game và tin', async ({ page }) => {
+  test('trang chủ hiện banner, khối tin theo từng game và tin nổi bật/giảm giá', async ({ page }) => {
     await page.goto('/');
     await expect(page).toHaveTitle('DoroShop – Shop acc uy tín');
     await expect(page.getByRole('heading', { level: 1 })).toContainText('Tìm acc không khó, đã có Doro');
-    await expect(page.getByRole('heading', { name: 'Chọn theo tựa game' })).toBeVisible();
+
+    // Mỗi game đang có tin còn hàng render một khối riêng, dẫn tới đúng bộ lọc của game đó.
+    const gameSection = page.getByRole('heading', { name: 'Liên Quân Mobile', exact: true }).locator('..');
+    await expect(gameSection.getByRole('link', { name: 'Xem tất cả acc Liên Quân Mobile →' })).toHaveAttribute(
+      'href',
+      '/accounts?games=lien-quan-mobile',
+    );
+    // "Khác" chưa có tin rao nào nên không hiện khối rỗng.
+    await expect(page.getByRole('heading', { name: 'Khác', exact: true })).toHaveCount(0);
+
     await expect(accountCards(page).first()).toBeVisible();
-    // 4 tin nổi bật + 4 tin giảm giá
-    await expect(accountCards(page)).toHaveCount(8);
+    // 5 game (tối đa 4 tin/game) + 4 tin nổi bật + 4 tin giảm giá
+    await expect(accountCards(page)).toHaveCount(28);
+  });
+
+  test('trang chủ không còn thanh danh mục game phụ dưới header', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('#main-nav')).toHaveCount(0);
+    // Nút "Xem tất cả acc" ở hero vẫn là lối vào xem toàn bộ tin, không lọc game.
+    await expect(page.getByRole('link', { name: 'Xem tất cả acc', exact: true })).toHaveAttribute(
+      'href',
+      '/accounts',
+    );
   });
 
   test('tìm kiếm, lọc, sắp xếp, phân trang và đồng bộ URL', async ({ page }) => {

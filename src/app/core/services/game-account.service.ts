@@ -1,7 +1,7 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Observable, delay, of, throwError } from 'rxjs';
 import { ACCOUNTS_SEED } from '../data/accounts.seed';
-import { GameAccount, GameAccountDraft } from '../models';
+import { GAMES, GameAccount, GameAccountDraft, GameId } from '../models';
 import { STORAGE_KEYS, StorageService } from './storage.service';
 import { AccountPage, AccountQuery, runQuery } from './account-query';
 
@@ -100,6 +100,35 @@ export class GameAccountService {
       .sort((a, b) => discountPercent(b) - discountPercent(a))
       .slice(0, limit);
     return fake(items);
+  }
+
+  /**
+   * Tin nổi bật của từng game, dùng cho các khối "theo game" ở trang chủ. Chỉ trả về
+   * những game đang thực sự có tin còn hàng (không trả khối rỗng), theo đúng thứ tự
+   * khai báo trong GAMES.
+   */
+  featuredByGame(limit = 4): Observable<{ game: GameId; accounts: GameAccount[] }[]> {
+    const byGame = new Map<GameId, GameAccount[]>();
+    for (const account of this.accounts()) {
+      if (account.status !== 'con_hang') {
+        continue;
+      }
+      const list = byGame.get(account.game);
+      if (list) {
+        list.push(account);
+      } else {
+        byGame.set(account.game, [account]);
+      }
+    }
+
+    const sections = GAMES.filter((game) => byGame.has(game.id)).map((game) => ({
+      game: game.id,
+      accounts: byGame
+        .get(game.id)!
+        .sort((a, b) => b.rating - a.rating || b.reviewCount - a.reviewCount)
+        .slice(0, limit),
+    }));
+    return fake(sections);
   }
 
   /** Tin cùng game, ưu tiên cùng rank. */
