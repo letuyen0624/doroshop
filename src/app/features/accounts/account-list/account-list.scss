@@ -41,12 +41,6 @@
   text-decoration: underline;
 }
 
-.filter-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-}
-
 fieldset.field {
   border: none;
   margin: 0;
@@ -60,25 +54,12 @@ fieldset.field legend {
   margin-bottom: var(--space-2);
 }
 
-.games,
 .ranks {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
   max-height: 190px;
   overflow-y: auto;
-}
-
-.price-row {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.price-row .input {
-  padding-left: 0.6rem;
-  padding-right: 0.6rem;
 }
 
 .stock-toggle {

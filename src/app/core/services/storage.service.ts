@@ -142,6 +142,7 @@ export class StorageService {
 
 export const STORAGE_KEYS = {
   accounts: 'accounts',
+  accountsSeedHash: 'accounts-seed-hash',
   users: 'users',
   session: 'session',
   orders: 'orders',

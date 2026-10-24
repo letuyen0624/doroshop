@@ -1,12 +1,10 @@
 import { GameAccount, GameId } from '../models';
 
-export type SortOption = 'newest' | 'price-asc' | 'price-desc' | 'rating';
+export type SortOption = 'price-asc' | 'price-desc';
 
 export const SORT_OPTIONS: readonly { value: SortOption; label: string }[] = [
-  { value: 'newest', label: 'Mới nhất' },
   { value: 'price-asc', label: 'Giá tăng dần' },
   { value: 'price-desc', label: 'Giá giảm dần' },
-  { value: 'rating', label: 'Đánh giá cao' },
 ];
 
 export interface AccountQuery {
@@ -36,7 +34,7 @@ export const DEFAULT_QUERY: AccountQuery = {
   minPrice: null,
   maxPrice: null,
   inStockOnly: false,
-  sort: 'newest',
+  sort: 'price-asc',
   page: 1,
   pageSize: 9,
 };
@@ -88,17 +86,11 @@ export function filterAccounts(accounts: readonly GameAccount[], query: AccountQ
 export function sortAccounts(accounts: readonly GameAccount[], sort: SortOption): GameAccount[] {
   const sorted = [...accounts];
   switch (sort) {
-    case 'price-asc':
-      return sorted.sort((a, b) => a.price - b.price);
     case 'price-desc':
       return sorted.sort((a, b) => b.price - a.price);
-    case 'rating':
-      return sorted.sort((a, b) => b.rating - a.rating || b.reviewCount - a.reviewCount);
-    case 'newest':
+    case 'price-asc':
     default:
-      return sorted.sort(
-        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-      );
+      return sorted.sort((a, b) => a.price - b.price);
   }
 }
 

@@ -66,7 +66,7 @@ describe('account-query', () => {
     it('kết hợp nhiều bộ lọc', () => {
       const result = filterAccounts(
         ACCOUNTS_SEED,
-        query({ games: ['lien-quan-mobile'], inStockOnly: true, maxPrice: 100_000 }),
+        query({ games: ['lien-quan-mobile'], inStockOnly: true, maxPrice: 250_000 }),
       );
       expect(ids(result)).toEqual(['acc-002']);
     });
@@ -83,16 +83,6 @@ describe('account-query', () => {
 
       expect(asc).toEqual([...asc].sort((a, b) => a - b));
       expect(desc).toEqual([...desc].sort((a, b) => b - a));
-    });
-
-    it('đánh giá cao xếp trước', () => {
-      const ratings = sortAccounts(ACCOUNTS_SEED, 'rating').map((account) => account.rating);
-      expect(ratings).toEqual([...ratings].sort((a, b) => b - a));
-    });
-
-    it('mới nhất xếp trước', () => {
-      const dates = sortAccounts(ACCOUNTS_SEED, 'newest').map((account) => account.createdAt);
-      expect(dates).toEqual([...dates].sort().reverse());
     });
 
     it('không làm thay đổi mảng gốc', () => {

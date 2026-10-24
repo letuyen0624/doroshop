@@ -15,10 +15,10 @@ interface SeedSpec {
  * để dữ liệu nhất quán: acc đã bán thì phải có đơn hàng tương ứng.
  */
 const SPECS: readonly SeedSpec[] = [
-  { daysAgo: 12, status: 'delivered', payment: 'cod', accountId: 'acc-004' },
+  { daysAgo: 12, status: 'delivered', payment: 'bank', accountId: 'acc-004' },
   { daysAgo: 9, status: 'delivered', payment: 'bank', accountId: 'acc-008', coupon: 'DORO10' },
   { daysAgo: 7, status: 'delivered', payment: 'wallet', accountId: 'acc-012' },
-  { daysAgo: 4, status: 'confirmed', payment: 'cod', accountId: 'acc-016' },
+  { daysAgo: 4, status: 'confirmed', payment: 'wallet', accountId: 'acc-016' },
   { daysAgo: 2, status: 'cancelled', payment: 'bank', accountId: 'acc-028' },
   { daysAgo: 1, status: 'pending', payment: 'wallet', accountId: 'acc-024' },
 ];

@@ -17,6 +17,13 @@ export const routes: Routes = [
     loadComponent: () => import('./features/accounts/account-list/account-list').then((m) => m.AccountList),
   },
   {
+    // Trang "Vào kho acc" của thẻ gateway Liên Quân Mobile ở trang chủ: 4 thẻ cổng vào theo tầng giá.
+    path: 'kho-acc-lien-quan',
+    title: 'Kho acc Liên Quân Mobile',
+    loadComponent: () =>
+      import('./features/kho-acc-lien-quan/kho-acc-lien-quan').then((m) => m.KhoAccLienQuan),
+  },
+  {
     path: 'accounts/:slug',
     title: 'Chi tiết tài khoản',
     loadComponent: () =>

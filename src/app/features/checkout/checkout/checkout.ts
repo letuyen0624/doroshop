@@ -66,11 +66,6 @@ export class Checkout {
 
   protected readonly paymentOptions: readonly PaymentOption[] = [
     {
-      value: 'cod',
-      label: PAYMENT_METHOD_LABELS.cod,
-      description: 'Xác nhận qua điện thoại, thanh toán khi nhận thông tin tài khoản.',
-    },
-    {
       value: 'bank',
       label: PAYMENT_METHOD_LABELS.bank,
       description: 'Chuyển khoản theo thông tin bên dưới, đơn được xác nhận sau khi nhận tiền.',
@@ -89,10 +84,10 @@ export class Checkout {
     fullName: [this.auth.currentUser()?.name ?? '', [Validators.required, Validators.minLength(2), notBlank()]],
     contact: ['', [Validators.required, emailOrVnPhone()]],
     note: ['', [Validators.maxLength(300)]],
-    paymentMethod: this.fb.nonNullable.control<PaymentMethod>('cod'),
+    paymentMethod: this.fb.nonNullable.control<PaymentMethod>('bank'),
   });
 
-  protected readonly method = signal<PaymentMethod>('cod');
+  protected readonly method = signal<PaymentMethod>('bank');
 
   /** Mã tham chiếu chuyển khoản cố định theo phiên, chỉ để minh họa. */
   protected readonly transferRef = `DR${Date.now().toString().slice(-6)}`;

@@ -1,7 +1,7 @@
 <div class="page container">
   <div class="page-head">
     <h1>Tất cả tài khoản</h1>
-    <p>Lọc theo game, rank và khoảng giá để tìm đúng acc bạn cần.</p>
+    <p>Lọc theo rank và tình trạng kho để tìm đúng acc bạn cần.</p>
   </div>
 
   <div class="layout">
@@ -15,37 +15,9 @@
         }
       </div>
 
-      <div class="field">
-        <label for="filter-search">Tìm kiếm</label>
-        <input
-          id="filter-search"
-          type="search"
-          class="input"
-          placeholder="Tên tin rao"
-          autocomplete="off"
-          [formControl]="searchControl"
-        />
-      </div>
-
-      <fieldset class="field games">
-        <legend>Game</legend>
-        @for (game of gameOptions; track game.id) {
-          @if (game.id !== 'khac') {
-            <label class="checkbox">
-              <input
-                type="checkbox"
-                [checked]="isGameSelected(game.id)"
-                (change)="toggleGame(game.id, $any($event.target).checked)"
-              />
-              <span>{{ game.name }}</span>
-            </label>
-          }
-        }
-      </fieldset>
-
       <fieldset class="field ranks">
-        <legend>Rank</legend>
-        @for (rank of availableRanks; track rank) {
+        <legend>{{ rankLabel() }}</legend>
+        @for (rank of availableRanks(); track rank) {
           <label class="checkbox">
             <input
               type="checkbox"
@@ -57,39 +29,10 @@
         }
       </fieldset>
 
-      <form [formGroup]="filterForm" class="filter-form">
-        <fieldset class="field">
-          <legend>Khoảng giá (₫)</legend>
-          <div class="price-row">
-            <label class="sr-only" for="filter-min">Giá thấp nhất</label>
-            <input
-              id="filter-min"
-              type="number"
-              class="input"
-              min="0"
-              step="50000"
-              [attr.placeholder]="priceRange.min"
-              formControlName="minPrice"
-            />
-            <span aria-hidden="true">–</span>
-            <label class="sr-only" for="filter-max">Giá cao nhất</label>
-            <input
-              id="filter-max"
-              type="number"
-              class="input"
-              min="0"
-              step="50000"
-              [attr.placeholder]="priceRange.max"
-              formControlName="maxPrice"
-            />
-          </div>
-        </fieldset>
-
-        <label class="checkbox stock-toggle">
-          <input type="checkbox" formControlName="inStockOnly" />
-          <span>Chỉ hiện còn hàng</span>
-        </label>
-      </form>
+      <label class="checkbox stock-toggle">
+        <input type="checkbox" [formControl]="inStockOnlyControl" />
+        <span>Chỉ hiện còn hàng</span>
+      </label>
     </aside>
 
     <section class="results" aria-labelledby="results-title">
@@ -133,7 +76,7 @@
         @if (page.items.length === 0) {
           <div class="empty-state card">
             <h3>Không tìm thấy tài khoản phù hợp</h3>
-            <p>Thử bỏ bớt một vài bộ lọc, mở rộng khoảng giá hoặc tìm với từ khóa ngắn hơn.</p>
+            <p>Thử bỏ bớt một vài bộ lọc hoặc quay lại trang chủ để xem gợi ý khác.</p>
             <button type="button" class="btn" (click)="clearFilters()">Xóa toàn bộ bộ lọc</button>
           </div>
         } @else {

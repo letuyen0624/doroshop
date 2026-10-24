@@ -18,6 +18,22 @@ function fake<T>(value: T): Observable<T> {
   return of(value).pipe(delay(latency()));
 }
 
+/**
+ * Hash đơn giản (djb2) của dữ liệu mẫu, tính một lần lúc nạp module. Dùng để phát hiện khi
+ * accounts.seed.ts đổi nội dung (đang phát triển, không phải admin tự sửa tin) nên localStorage
+ * của trình duyệt cần nạp lại từ seed mới, thay vì giữ mãi bản cũ đã lưu từ trước.
+ */
+function hashSeed(value: unknown): string {
+  const text = JSON.stringify(value);
+  let hash = 0;
+  for (let i = 0; i < text.length; i++) {
+    hash = (hash * 31 + text.charCodeAt(i)) | 0;
+  }
+  return hash.toString(36);
+}
+
+const ACCOUNTS_SEED_HASH = hashSeed(ACCOUNTS_SEED);
+
 function slugify(value: string): string {
   return value
     .normalize('NFD')
@@ -50,9 +66,15 @@ export class GameAccountService {
   /** Số tựa game khác nhau đang có tin rao, thêm/bớt game không cần sửa tay ở giao diện. */
   readonly gameCount = computed(() => new Set(this.accounts().map((account) => account.game)).size);
 
-  /** Danh sách rank hiện có, đã sắp xếp theo bảng chữ cái. */
-  ranks(): string[] {
-    return [...new Set(this.accounts().map((account) => account.rank))].sort((a, b) => a.localeCompare(b, 'vi'));
+  /**
+   * Danh sách rank hiện có, đã sắp xếp theo bảng chữ cái. Mỗi game có hệ rank riêng
+   * (vd. Liên Quân có "Cao Thủ", Genshin có "AR 60") nên khi truyền `games` thì chỉ
+   * lấy rank của những game đó, tránh trộn rank không liên quan vào bộ lọc.
+   */
+  ranks(games: GameId[] = []): string[] {
+    const gameSet = new Set(games);
+    const accounts = gameSet.size > 0 ? this.accounts().filter((account) => gameSet.has(account.game)) : this.accounts();
+    return [...new Set(accounts.map((account) => account.rank))].sort((a, b) => a.localeCompare(b, 'vi'));
   }
 
   /** Khoảng giá nhỏ nhất và lớn nhất của toàn bộ tin rao. */
@@ -204,11 +226,13 @@ export class GameAccountService {
 
   private load(): GameAccount[] {
     const stored = this.storage.read<GameAccount[]>(STORAGE_KEYS.accounts);
-    if (stored && Array.isArray(stored) && stored.length > 0) {
+    const storedHash = this.storage.read<string>(STORAGE_KEYS.accountsSeedHash);
+    if (stored && Array.isArray(stored) && stored.length > 0 && storedHash === ACCOUNTS_SEED_HASH) {
       return stored;
     }
     const seed = ACCOUNTS_SEED.map((account) => ({ ...account }));
     this.storage.write(STORAGE_KEYS.accounts, seed);
+    this.storage.write(STORAGE_KEYS.accountsSeedHash, ACCOUNTS_SEED_HASH);
     return seed;
   }
 }

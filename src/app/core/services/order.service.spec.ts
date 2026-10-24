@@ -14,7 +14,7 @@ describe('OrderService: mỗi đơn đúng một tài khoản', () => {
     userId: 'u-demo',
     accountId: 'acc-002',
     contact,
-    paymentMethod: 'cod',
+    paymentMethod: 'bank',
     couponCode: null,
     ...overrides,
   });

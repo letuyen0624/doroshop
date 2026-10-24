@@ -194,7 +194,7 @@
   }
 }
 
-/* ---------- Khối "theo tựa game" ---------- */
+/* ---------- Khối "theo tựa game" (Mặc định) ---------- */
 
 .game-section-title {
   display: inline-flex;
@@ -211,8 +211,24 @@
 
 .account-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  /* Dùng auto-fit kết hợp max-width (ví dụ 320px) để lưới tự động co giãn và không làm thẻ bị phình quá to */
+  grid-template-columns: repeat(auto-fit, minmax(240px, 320px));
+  justify-content: center; /* Lệnh "thần thánh" giúp căn giữa toàn bộ các thẻ */
   gap: var(--space-4);
+}
+
+/* Khối Liên Quân Mobile có 5 thẻ (3 tầng giá + 2 dịch vụ): dùng flex-wrap để mỗi hàng tự căn
+   giữa riêng, cho ra đúng bố cục 3 thẻ hàng trên - 2 thẻ hàng dưới trên màn hình rộng, và tự
+   co về 2/1 thẻ mỗi hàng trên màn hình hẹp. */
+.lien-quan-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.lien-quan-grid > * {
+  flex: 1 1 320px;
+  max-width: 360px;
 }
 
 .skeleton-card {
@@ -288,6 +304,85 @@
   display: block;
   width: min(100%, 560px);
   height: auto;
-  /* Ảnh có viền trong suốt quanh chữ, kéo ra một chút để chữ thẳng hàng lề trái. */
   margin: -12px 0 -8px -18px;
+}
+
+/* =========================================
+   STYLE CHO HEADER ĐẶC BIỆT (LIÊN QUÂN BANNER)
+   ========================================= */
+
+.doro-special-header {
+  display: flex;
+  justify-content: center; /* Căn giữa toàn bộ nội dung */
+  align-items: center;
+  position: relative; /* Làm điểm tựa để giữ nút "Xem tất cả" */
+  margin-top: 20px;
+  margin-bottom: 40px; /* Tăng khoảng cách với các thẻ sản phẩm bên dưới */
+}
+
+/* Ép margin của thẻ h2 về 0 để ảnh được căn giữa hoàn hảo */
+.doro-special-header .game-section-title {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+/* Phóng to bức ảnh Doro hết cỡ và thêm hiệu ứng */
+.doro-special-header .doro-banner-title {
+  height: 180px !important;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(4px 6px 12px rgba(0, 0, 0, 0.15));
+  
+  /* Gọi hiệu ứng lơ lửng chạy liên tục */
+  animation: doro-float 3s ease-in-out infinite; 
+  /* Chuyển động mượt mà khi đổi trạng thái */
+  transition: filter 0.3s ease; 
+}
+
+/* Khi người dùng di chuột vào banner Doro */
+.doro-special-header .doro-banner-title:hover {
+  /* Gọi hiệu ứng lắc lư */
+  animation: doro-wiggle 0.5s ease-in-out infinite alternate;
+  /* Làm bóng đổ sáng hơn một chút khi hover */
+  filter: drop-shadow(4px 6px 16px rgba(255, 105, 180, 0.4)); 
+  cursor: pointer;
+}
+
+/* --- ĐỊNH NGHĨA CÁC CHUYỂN ĐỘNG (KEYFRAMES) --- */
+
+/* Hiệu ứng 1: Lơ lửng lên xuống (có kèm giữ nguyên tỷ lệ scale 1.1) */
+@keyframes doro-float {
+  0% { transform: translateY(0px) scale(1.1); }
+  50% { transform: translateY(-8px) scale(1.1); }
+  100% { transform: translateY(0px) scale(1.1); }
+}
+
+/* Hiệu ứng 2: Lắc lư qua lại khi Hover */
+@keyframes doro-wiggle {
+  0% { transform: scale(1.15) rotate(0deg); }
+  25% { transform: scale(1.15) rotate(-3deg); }
+  50% { transform: scale(1.15) rotate(0deg); }
+  75% { transform: scale(1.15) rotate(3deg); }
+  100% { transform: scale(1.15) rotate(0deg); }
+}
+
+/* Neo nút "Xem tất cả acc" nằm ở góc phải */
+.doro-special-header .view-all-link {
+  position: absolute;
+  right: 0;
+  bottom: -15px; /* Căn chỉnh nút cao/thấp cho vừa mắt */
+}
+
+/* Class giúp ẩn chữ tên game (Liên Quân) nhưng vẫn giữ cho SEO và trình đọc màn hình */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
 }

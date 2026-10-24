@@ -53,10 +53,11 @@ export const GAMES: readonly Game[] = [
   { id: 'khac', name: 'Khác', description: 'Các game khác' },
 ] as const;
 
+/** "Trắng thông tin" là cách gọi phổ biến trong giới mua bán acc cho tài khoản chưa liên kết thông tin cá nhân nào. */
 export const LOGIN_STATUS_LABELS: Record<LoginStatus, string> = {
   da_lien_ket_fb: 'Đã liên kết Facebook',
   da_lien_ket_sms: 'Đã liên kết SMS',
-  chua_lien_ket: 'Chưa liên kết',
+  chua_lien_ket: 'Trắng thông tin',
 };
 
 export const ACCOUNT_STATUS_LABELS: Record<AccountStatus, string> = {
@@ -74,4 +75,21 @@ const GAME_NAME_MAP: Record<GameId, string> = GAMES.reduce(
 
 export function gameName(id: GameId): string {
   return GAME_NAME_MAP[id] ?? id;
+}
+
+/**
+ * Nhãn cho ô lọc "Rank" theo đúng thuật ngữ từng game — Genshin Impact không có rank
+ * đấu hạng mà dùng "Cấp độ AR" (Adventure Rank), các game MOBA/bắn súng còn lại đều
+ * gọi là "Rank" nên không cần khai báo riêng.
+ */
+const RANK_FILTER_LABEL_OVERRIDES: Partial<Record<GameId, string>> = {
+  'genshin-impact': 'Cấp độ AR',
+};
+
+/** Chỉ đổi nhãn khi bộ lọc đang khoanh vùng đúng 1 game; chọn nhiều/không chọn thì dùng "Rank" chung. */
+export function rankFilterLabel(selectedGames: readonly GameId[]): string {
+  if (selectedGames.length !== 1) {
+    return 'Rank';
+  }
+  return RANK_FILTER_LABEL_OVERRIDES[selectedGames[0]] ?? 'Rank';
 }

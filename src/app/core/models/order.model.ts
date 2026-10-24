@@ -1,4 +1,5 @@
-export type PaymentMethod = 'cod' | 'bank' | 'wallet';
+/** Acc game là hàng số, bàn giao ngay sau khi thanh toán nên không có "thanh toán khi nhận" như hàng vật lý. */
+export type PaymentMethod = 'bank' | 'wallet';
 
 export type OrderStatus = 'pending' | 'confirmed' | 'delivered' | 'cancelled';
 
@@ -65,7 +66,6 @@ export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
 };
 
 export const PAYMENT_METHOD_LABELS: Record<PaymentMethod, string> = {
-  cod: 'Thanh toán khi nhận (COD)',
   bank: 'Chuyển khoản ngân hàng',
   wallet: 'Ví điện tử DoroPay',
 };

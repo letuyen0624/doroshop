@@ -10,16 +10,16 @@ const login = async (page: Page, email: string, password: string, returnTo = '/'
 const accountCards = (page: Page) => page.locator('app-account-card');
 
 test.describe('duyệt và lọc tài khoản', () => {
-  test('trang chủ hiện banner và khối tin theo từng game', async ({ page }) => {
+  test('trang chủ hiện banner, khối tin theo game và thẻ gateway Liên Quân', async ({ page }) => {
     await page.goto('/');
     await expect(page).toHaveTitle('DoroShop – Shop acc uy tín');
     await expect(page.getByRole('heading', { level: 1 })).toContainText('Tìm acc không khó, đã có Doro');
 
-    // Mỗi game đang có tin còn hàng render một khối riêng, dẫn tới đúng bộ lọc của game đó.
-    const gameSection = page.getByRole('heading', { name: 'Liên Quân Mobile', exact: true }).locator('..');
-    await expect(gameSection.getByRole('link', { name: 'Xem tất cả acc Liên Quân Mobile →' })).toHaveAttribute(
+    // Các game khác: mỗi game đang có tin còn hàng render một khối riêng, dẫn tới đúng bộ lọc của game đó.
+    const lmht = page.getByRole('heading', { name: 'Liên Minh Huyền Thoại', exact: true }).locator('..');
+    await expect(lmht.getByRole('link', { name: 'Xem tất cả acc Liên Minh Huyền Thoại →' })).toHaveAttribute(
       'href',
-      '/accounts?games=lien-quan-mobile',
+      '/accounts?games=lien-minh-huyen-thoai',
     );
     // "Khác" chưa có tin rao nào nên không hiện khối rỗng.
     await expect(page.getByRole('heading', { name: 'Khác', exact: true })).toHaveCount(0);
@@ -27,9 +27,59 @@ test.describe('duyệt và lọc tài khoản', () => {
     await expect(page.getByRole('heading', { name: 'Tin nổi bật' })).toHaveCount(0);
     await expect(page.getByRole('heading', { name: 'Đang giảm giá' })).toHaveCount(0);
 
+    // Thẻ gateway "Acc Liên Quân" đứng đầu, rồi 2 thẻ dịch vụ. "Vào kho acc" chuyển sang trang
+    // "Kho acc Liên Quân Mobile" (4 thẻ theo tầng giá).
+    const lienQuanCards = page.locator('.lien-quan-grid app-account-card');
+    await expect(lienQuanCards).toHaveCount(3);
+    await expect(lienQuanCards.locator('.name')).toHaveText(['Acc Liên Quân', 'Cày thuê rank', 'Nạp game']);
+    await expect(lienQuanCards.first().getByRole('link', { name: 'VÀO KHO ACC' })).toHaveAttribute(
+      'href',
+      '/kho-acc-lien-quan',
+    );
+
+    // 4 game thật còn lại (tối đa 4 tin mỗi game) + 3 thẻ Liên Quân (gateway + cày thuê + nạp game)
     await expect(accountCards(page).first()).toBeVisible();
-    // 5 game, tối đa 4 tin mỗi game
-    await expect(accountCards(page)).toHaveCount(20);
+    await expect(accountCards(page)).toHaveCount(19);
+  });
+
+  test('trang "Kho acc Liên Quân Mobile" hiện 4 thẻ tầng giá dẫn tới đúng danh sách đã lọc', async ({
+    page,
+  }) => {
+    await page.goto('/kho-acc-lien-quan');
+    await expect(page).toHaveTitle('Kho acc Liên Quân Mobile | DoroShop');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Kho acc Liên Quân Mobile');
+
+    const tiers = page.locator('.tier-card');
+    await expect(tiers).toHaveCount(4);
+    await expect(tiers.locator('.name')).toHaveText([
+      'Acc Giá Rẻ',
+      'Acc Phổ Thông',
+      'Acc Tầm Trung',
+      'Acc Siêu Phẩm',
+    ]);
+    await expect(tiers.locator('.meta')).toHaveText(['Còn 2 acc', 'Còn 1 acc', 'Còn 2 acc', 'Hết hàng']);
+
+    await expect(tiers.nth(0).locator('.cta')).toHaveAttribute(
+      'href',
+      '/accounts?games=lien-quan-mobile&maxPrice=299999&inStock=1',
+    );
+    await expect(tiers.nth(1).locator('.cta')).toHaveAttribute(
+      'href',
+      '/accounts?games=lien-quan-mobile&minPrice=300000&maxPrice=999999&inStock=1',
+    );
+    await expect(tiers.nth(2).locator('.cta')).toHaveAttribute(
+      'href',
+      '/accounts?games=lien-quan-mobile&minPrice=1000000&maxPrice=5000000&inStock=1',
+    );
+    await expect(tiers.nth(3).locator('.cta')).toHaveAttribute(
+      'href',
+      '/accounts?games=lien-quan-mobile&minPrice=5000001&inStock=1',
+    );
+
+    // Số trên thẻ khớp số kết quả ở danh sách mở ra.
+    await tiers.nth(0).locator('.cta').click();
+    await expect(page).toHaveURL(/maxPrice=299999/);
+    await expect(page.getByRole('status').filter({ hasText: 'Có 2 tài khoản phù hợp' })).toBeVisible();
   });
 
   test('trang chủ không còn thanh danh mục game phụ dưới header', async ({ page }) => {
@@ -45,24 +95,22 @@ test.describe('duyệt và lọc tài khoản', () => {
   test('tìm kiếm, lọc, sắp xếp, phân trang và đồng bộ URL', async ({ page }) => {
     await page.goto('/accounts');
     await expect(accountCards(page)).toHaveCount(9);
-    await expect(page.getByRole('status').filter({ hasText: 'Hiển thị 1-9 trong 27' })).toBeVisible();
+    await expect(page.getByRole('status').filter({ hasText: 'Có 27 tài khoản phù hợp' })).toBeVisible();
 
     // Phân trang: sang trang 2 và giữ trên URL
     await page.getByRole('button', { name: 'Trang 2' }).click();
     await expect(page).toHaveURL(/page=2/);
     await expect(accountCards(page)).toHaveCount(9);
 
-    // Tìm kiếm có debounce, không dấu vẫn ra kết quả, và reset về trang 1
-    await page.locator('#filter-search').fill('genshin');
+    // Tìm kiếm từ ô tìm kiếm ở header (bộ lọc trong trang không còn ô này), reset về trang 1
+    await page.locator('#header-search').fill('genshin');
+    await page.getByRole('button', { name: 'Tìm kiếm' }).click();
     await expect(page).toHaveURL(/search=genshin/);
     await expect(page).not.toHaveURL(/page=2/);
     await expect(accountCards(page)).toHaveCount(5);
 
-    // Xóa tìm kiếm bằng nút xóa lọc, rồi lọc theo game
-    await page.getByRole('button', { name: /Xóa lọc/ }).click();
-    await expect(accountCards(page)).toHaveCount(9);
-    await page.getByRole('group', { name: 'Game' }).getByLabel('Valorant').check();
-    await expect(page).toHaveURL(/games=valorant/);
+    // Lọc theo game vẫn hoạt động qua link sâu (không còn ô chọn game trong bộ lọc trang)
+    await page.goto('/accounts?games=valorant');
     await expect(accountCards(page)).toHaveCount(5);
 
     // Lọc thêm theo rank
@@ -156,7 +204,7 @@ test.describe('mua ngay, đăng ký và thanh toán', () => {
     // Sau khi đăng ký quay lại đúng trang checkout, acc đã chọn vẫn được chọn sẵn
     await expect(page).toHaveURL(/\/checkout\?account=acc-lien-quan-gia-re-rank-vang$/);
     await expect(page.getByRole('heading', { name: 'Thanh toán', level: 1 })).toBeVisible();
-    await expect(page.locator('.summary .item')).toContainText('Acc Liên Quân giá rẻ - Rank Vàng, 30 tướng');
+    await expect(page.locator('.summary .item')).toContainText('Acc Liên Quân giá rẻ - Rank Bạch Kim, 50 tướng');
 
     // Mã giảm giá áp dụng ngay tại checkout: mã sai bị từ chối, mã đúng được áp dụng
     await page.getByLabel('Mã giảm giá').fill('SAIMA');
@@ -165,7 +213,7 @@ test.describe('mua ngay, đăng ký và thanh toán', () => {
     await page.getByLabel('Mã giảm giá').fill('doro10');
     await page.getByRole('button', { name: 'Áp dụng' }).click();
     await expect(page.getByText('Giảm giá (DORO10)')).toBeVisible();
-    await expect(page.locator('.totals .grand dd')).toContainText('80.100'); // 89.000 - 10%
+    await expect(page.locator('.totals .grand dd')).toContainText('180.000'); // 200.000 - 10%
 
     // Validate form nhận tài khoản
     await page.getByLabel('Email hoặc số điện thoại').fill('khong-hop-le');
@@ -192,7 +240,7 @@ test.describe('mua ngay, đăng ký và thanh toán', () => {
     await expect(page).toHaveURL(/\/account\/orders$/);
     await expect(page.locator('.order')).toHaveCount(1);
     await page.getByRole('button', { name: /DR-000007/ }).click();
-    await expect(page.getByRole('cell', { name: 'Acc Liên Quân giá rẻ - Rank Vàng, 30 tướng' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'Acc Liên Quân giá rẻ - Rank Bạch Kim, 50 tướng' })).toBeVisible();
     await expect(page.getByText('Chờ xác nhận').first()).toBeVisible();
 
     // Tài khoản vừa mua đổi sang trạng thái đã bán
@@ -204,12 +252,12 @@ test.describe('mua ngay, đăng ký và thanh toán', () => {
     await login(page, 'demo@doroshop.vn', 'demo123');
     await expect(page).toHaveURL('/');
     await page.goto('/accounts?search=gia%20re');
-    const card = accountCards(page).filter({ hasText: 'Acc Liên Quân giá rẻ - Rank Vàng, 30 tướng' });
-    await card.getByRole('link', { name: /Mua ngay/ }).click();
+    await expect(accountCards(page)).toHaveCount(1);
+    await accountCards(page).getByRole('link', { name: /Mua ngay/ }).click();
 
     await expect(page).toHaveURL(/\/checkout\?account=acc-lien-quan-gia-re-rank-vang$/);
     await expect(page.locator('.summary .item')).toHaveCount(1);
-    await expect(page.locator('.totals .grand dd')).toContainText('89.000');
+    await expect(page.locator('.totals .grand dd')).toContainText('200.000');
   });
 
   test('checkout không chọn acc thì báo chưa chọn, /cart không còn tồn tại', async ({ page }) => {
@@ -340,7 +388,7 @@ test.describe('khu vực admin', () => {
     // Tin mới hiện ở cửa hàng với thông tin thêm và mức giảm 23%
     await page.goto('/accounts/acc-test-e2e-rank-kim-cuong');
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Acc Test E2E - Rank Kim Cương');
-    await expect(page.locator('.floating')).toHaveText('-23%');
+    await expect(page.locator('.gallery-main .floating')).toHaveText('-23%');
     await expect(page.getByRole('cell', { name: '20/24' })).toBeVisible();
 
     // Sửa

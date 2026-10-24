@@ -97,19 +97,40 @@
   } @else {
     @for (section of gameSections(); track section.game.id) {
       <section class="container section" [attr.aria-labelledby]="'game-' + section.game.id + '-title'">
-        <div class="section-head">
+        
+        <div class="section-head" [class.doro-special-header]="section.game.id === 'lien-quan-mobile'">
           <h2 [id]="'game-' + section.game.id + '-title'" class="game-section-title">
-            <app-game-badge [game]="section.game.id" [compact]="true" aria-hidden="true" />
-            {{ section.game.name }}
+            
+            @if (section.game.id === 'lien-quan-mobile') {
+              <img src="/assets/lien-quan-banner.png" alt="Liên Quân Mobile" class="doro-banner-title" />
+              <span class="sr-only">{{ section.game.name }}</span>
+            } @else {
+              <app-game-badge [game]="section.game.id" [compact]="true" aria-hidden="true" />
+              {{ section.game.name }}
+            }
+            
           </h2>
-          <a [routerLink]="['/accounts']" [queryParams]="{ games: section.game.id }">
-            Xem tất cả acc {{ section.game.name }} →
-          </a>
+          
+          <!-- Chỉ hiển thị nút Xem tất cả nếu không phải là Liên Quân Mobile -->
+          @if (section.game.id !== 'lien-quan-mobile') {
+            <a [routerLink]="['/accounts']" [queryParams]="{ games: section.game.id }" class="view-all-link">
+              Xem tất cả acc {{ section.game.name }} →
+            </a>
+          }
         </div>
 
-        <div class="account-grid">
-          @for (account of section.accounts; track account.id) {
-            <app-account-card [account]="account" />
+        <div class="account-grid" [class.lien-quan-grid]="section.game.id === 'lien-quan-mobile'">
+          @if (section.game.id === 'lien-quan-mobile') {
+            <!-- Liên Quân Mobile: thẻ gateway "Acc Liên Quân" (kèm chip tầng giá Giá Rẻ/Tầm
+                 Trung/VIP làm con bên trong) + 2 thẻ dịch vụ (cày thuê/nạp game) -->
+            <app-account-card [account]="lienQuanFlagshipCard" />
+            @for (account of lienQuanServiceCards; track account.id) {
+              <app-account-card [account]="account" />
+            }
+          } @else {
+            @for (account of section.accounts; track account.id) {
+              <app-account-card [account]="account" />
+            }
           }
         </div>
       </section>

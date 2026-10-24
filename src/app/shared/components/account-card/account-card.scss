@@ -1,12 +1,15 @@
+/* height để "auto" (không phải 100%) để align-items: stretch của lưới cha (Grid lẫn Flex) tự
+   co giãn đúng theo hàng — 100% là giá trị cố định nên không kích hoạt được stretch trong ngữ
+   cảnh Flexbox (.lien-quan-grid). */
 :host {
-  display: block;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .account-card {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  flex: 1;
   overflow: hidden;
   transition:
     transform var(--transition),
@@ -24,6 +27,7 @@
   position: relative;
   display: block;
   background: var(--surface-2);
+  overflow: hidden; /* Cắt phần ảnh bị dư khi zoom để không mất bo góc */
 }
 
 .badges {
@@ -34,10 +38,30 @@
   flex-direction: column;
   align-items: flex-start;
   gap: var(--space-2);
+  z-index: 2; /* Đảm bảo badge luôn nằm trên ảnh */
 }
 
 .badges .badge {
   box-shadow: var(--shadow-sm);
+}
+
+/* Badge giảm giá/đã bán nổi trên góc ảnh, giống trang chi tiết. */
+.floating {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  font-size: 0.85rem;
+  padding: 0.3rem 0.7rem;
+  z-index: 2;
+}
+
+.floating-right {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  font-size: 0.85rem;
+  padding: 0.3rem 0.7rem;
+  z-index: 2;
 }
 
 .body {
@@ -70,24 +94,96 @@
   color: var(--text-muted);
 }
 
+/* Lưới 2 cột: Tướng/Trang phục/Rank/Trạng thái, giống bảng thông số của các shop acc Liên Quân. */
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-1) var(--space-3);
+  width: 100%;
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.stats dt {
+  color: var(--text-muted);
+  display: inline;
+}
+
+.stats dd {
+  margin: 0 0 0 0.3em;
+  display: inline;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* Khối giá tiền: giá cũ gạch ngang phía trên, giá bán xếp dưới cho nổi bật. */
 .prices {
   display: flex;
-  align-items: baseline;
-  gap: var(--space-2);
-  flex-wrap: wrap;
+  flex-direction: column;
   margin-top: auto;
   padding-top: var(--space-2);
   width: 100%;
 }
 
 .price {
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   font-weight: 800;
   color: var(--accent-strong);
 }
 
 .old-price {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--text-subtle);
   text-decoration: line-through;
 }
+
+/* Nút dùng đúng .btn chung của site (var(--btn-primary)/var(--on-primary)), chỉ đẩy xuống đáy thẻ
+   vì card không có khối .prices phía trên. */
+.portal-btn {
+  margin-top: auto;
+}
+
+/* =========================================
+   ẢNH BANNER CHO 2 THẺ DỊCH VỤ (Cày thuê rank / Nạp game)
+   ========================================= */
+.acc-thumbnail {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+  display: block;
+  filter: contrast(1.1) saturate(1.15);
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Hiệu ứng zoom nhẹ ảnh khi đưa chuột vào thẻ */
+.account-card:hover .acc-thumbnail {
+  transform: scale(1.08);
+}
+
+/* =========================================
+   LỚP PHỦ MÀU THƯƠNG HIỆU LÊN ẢNH MINH HỌA
+   (Cày thuê rank / Nạp game) - không chỉnh sửa
+   file ảnh gốc, chỉ kéo tông màu lại gần hồng-tím
+   chủ đạo của site bằng một lớp overlay CSS.
+   ========================================= */
+.thumb-tinted::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-primary) 55%, transparent) 0%,
+    color-mix(in srgb, var(--color-secondary) 55%, transparent) 100%
+  );
+  mix-blend-mode: soft-light;
+}
+
+/* Tag phân loại "DỊCH VỤ" cho 2 thẻ dịch vụ - cùng hình dáng pill với badge-sale
+   (kế thừa từ .badge dùng chung toàn site), chỉ đổi màu sang tông tím phụ của thương hiệu. */
+.badge-service {
+  background: var(--accent-2-soft);
+  color: var(--accent-2-strong);
+}
+
